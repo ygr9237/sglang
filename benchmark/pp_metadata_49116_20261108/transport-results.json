@@ -1,0 +1,274 @@
+{
+  "kind": "actual_GroupCoordinator_output_leg_with_ack",
+  "rounds": 6,
+  "cases": [
+    {
+      "case": {
+        "name": "no_logprob_b25",
+        "kind": "none",
+        "batch": 25
+      },
+      "iterations_per_round": 50,
+      "arms": {
+        "base": {
+          "total_us": {
+            "p50_us": 331.6255,
+            "p95_us": 381.8744,
+            "mean_us": 356.8305833333333,
+            "samples": 300
+          },
+          "round_median_total_us": [
+            344.0965,
+            341.727,
+            349.173,
+            304.937,
+            308.51800000000003,
+            334.18550000000005
+          ]
+        },
+        "fixed": {
+          "total_us": {
+            "p50_us": 323.871,
+            "p95_us": 543.6265,
+            "mean_us": 388.83333,
+            "samples": 300
+          },
+          "round_median_total_us": [
+            322.998,
+            353.457,
+            348.351,
+            310.497,
+            311.942,
+            317.834
+          ]
+        }
+      }
+    },
+    {
+      "case": {
+        "name": "python_top20_b25",
+        "kind": "python",
+        "batch": 25
+      },
+      "iterations_per_round": 50,
+      "arms": {
+        "base": {
+          "total_us": {
+            "p50_us": 397.11400000000003,
+            "p95_us": 430.04655,
+            "mean_us": 410.2820233333333,
+            "samples": 300
+          },
+          "round_median_total_us": [
+            402.16600000000005,
+            400.76300000000003,
+            393.1195,
+            399.64599999999996,
+            393.9125,
+            395.17150000000004
+          ]
+        },
+        "fixed": {
+          "total_us": {
+            "p50_us": 647.2625,
+            "p95_us": 688.5195,
+            "mean_us": 695.8367233333333,
+            "samples": 300
+          },
+          "round_median_total_us": [
+            644.0015,
+            653.306,
+            642.7875,
+            648.3655,
+            646.741,
+            643.3505
+          ]
+        }
+      }
+    },
+    {
+      "case": {
+        "name": "cpu_rows_b25",
+        "kind": "cpu",
+        "batch": 25
+      },
+      "iterations_per_round": 50,
+      "arms": {
+        "base": {
+          "total_us": {
+            "p50_us": 5550.3705,
+            "p95_us": 5799.1943,
+            "mean_us": 5605.443023333333,
+            "samples": 300
+          },
+          "round_median_total_us": [
+            5689.04,
+            5540.623,
+            5528.991,
+            5541.299999999999,
+            5540.458500000001,
+            5565.0295
+          ]
+        },
+        "fixed": {
+          "total_us": {
+            "p50_us": 5472.314,
+            "p95_us": 5548.60015,
+            "mean_us": 5478.150246666667,
+            "samples": 300
+          },
+          "round_median_total_us": [
+            5492.948,
+            5478.12,
+            5465.242,
+            5455.197,
+            5479.2880000000005,
+            5462.469999999999
+          ]
+        }
+      }
+    },
+    {
+      "case": {
+        "name": "cpu_view32k_b1",
+        "kind": "cpu",
+        "batch": 1,
+        "storage_rows": 32768
+      },
+      "iterations_per_round": 5,
+      "arms": {
+        "base": {
+          "total_us": {
+            "p50_us": 11714.371500000001,
+            "p95_us": 22402.92195,
+            "mean_us": 13463.854633333332,
+            "samples": 30
+          },
+          "round_median_total_us": [
+            22196.315,
+            11738.391,
+            11521.822,
+            11841.946,
+            11591.957,
+            11740.557
+          ]
+        },
+        "fixed": {
+          "total_us": {
+            "p50_us": 771.204,
+            "p95_us": 973.8789999999995,
+            "mean_us": 796.1188,
+            "samples": 30
+          },
+          "round_median_total_us": [
+            845.1,
+            774.616,
+            741.09,
+            798.241,
+            773.84,
+            760.192
+          ]
+        }
+      }
+    },
+    {
+      "case": {
+        "name": "cpu_view32k_b25",
+        "kind": "cpu",
+        "batch": 25,
+        "storage_rows": 32768
+      },
+      "iterations_per_round": 5,
+      "arms": {
+        "base": {
+          "total_us": {
+            "p50_us": 819513.5175000001,
+            "p95_us": 854501.23705,
+            "mean_us": 823462.7699666667,
+            "samples": 30
+          },
+          "round_median_total_us": [
+            821207.152,
+            819489.373,
+            819962.849,
+            819537.662,
+            818040.703,
+            816460.029
+          ]
+        },
+        "fixed": {
+          "total_us": {
+            "p50_us": 5408.433,
+            "p95_us": 5847.86515,
+            "mean_us": 5546.3794333333335,
+            "samples": 30
+          },
+          "round_median_total_us": [
+            5402.641,
+            5549.51,
+            5401.31,
+            5300.615,
+            5508.855,
+            5414.225
+          ]
+        }
+      }
+    },
+    {
+      "case": {
+        "name": "cuda_rows_b25",
+        "kind": "cuda",
+        "batch": 25
+      },
+      "iterations_per_round": 50,
+      "arms": {
+        "fixed": {
+          "total_us": {
+            "p50_us": 6645.3634999999995,
+            "p95_us": 6809.5380000000005,
+            "mean_us": 6520.172003333333,
+            "samples": 300
+          },
+          "round_median_total_us": [
+            6720.022499999999,
+            6538.2785,
+            6505.6195,
+            6497.202499999999,
+            6494.2785,
+            6497.924
+          ]
+        }
+      },
+      "baseline_omitted": "Nested CUDA metadata is unsafe on the PP communication stream; only the fixed transport is exercised."
+    },
+    {
+      "case": {
+        "name": "cuda_view32k_b1",
+        "kind": "cuda",
+        "batch": 1,
+        "storage_rows": 32768
+      },
+      "iterations_per_round": 5,
+      "arms": {
+        "fixed": {
+          "total_us": {
+            "p50_us": 869.74,
+            "p95_us": 926.0406999999999,
+            "mean_us": 868.1634333333334,
+            "samples": 30
+          },
+          "round_median_total_us": [
+            884.753,
+            869.86,
+            878.826,
+            870.11,
+            851.569,
+            824.039
+          ]
+        }
+      },
+      "baseline_omitted": "Nested CUDA metadata is unsafe on the PP communication stream; only the fixed transport is exercised."
+    }
+  ],
+  "complete": true
+}

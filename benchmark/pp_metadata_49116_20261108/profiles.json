@@ -1,0 +1,656 @@
+[
+  {
+    "case": "no_logprob_b25",
+    "arm": "base",
+    "pickle_bytes": 147,
+    "events": [
+      {
+        "key": "pp.prepare_metadata",
+        "count": 1,
+        "cpu_total_us": 391.427,
+        "self_cpu_us": 391.427,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "pp.split_top_level",
+        "count": 1,
+        "cpu_total_us": 167.00900000000001,
+        "self_cpu_us": 167.00900000000001,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "pp.pickle_metadata",
+        "count": 1,
+        "cpu_total_us": 68.86900000000014,
+        "self_cpu_us": 68.86900000000014,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "cudaDeviceSynchronize",
+        "count": 2,
+        "cpu_total_us": 27.80899999999997,
+        "self_cpu_us": 27.80899999999997,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      }
+    ]
+  },
+  {
+    "case": "no_logprob_b25",
+    "arm": "fixed",
+    "pickle_bytes": 147,
+    "events": [
+      {
+        "key": "pp.prepare_metadata",
+        "count": 1,
+        "cpu_total_us": 63.610000000000014,
+        "self_cpu_us": 63.610000000000014,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "pp.split_top_level",
+        "count": 1,
+        "cpu_total_us": 35.25999999999999,
+        "self_cpu_us": 35.25999999999999,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "pp.pickle_metadata",
+        "count": 1,
+        "cpu_total_us": 39.55499999999995,
+        "self_cpu_us": 39.55499999999995,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "cudaDeviceSynchronize",
+        "count": 2,
+        "cpu_total_us": 25.915000000000134,
+        "self_cpu_us": 25.915000000000134,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      }
+    ]
+  },
+  {
+    "case": "cpu_view32k_b25",
+    "arm": "base",
+    "pickle_bytes": 196623359,
+    "events": [
+      {
+        "key": "pp.prepare_metadata",
+        "count": 1,
+        "cpu_total_us": 104.01699999999997,
+        "self_cpu_us": 104.01699999999997,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "pp.split_top_level",
+        "count": 1,
+        "cpu_total_us": 65.24200000000002,
+        "self_cpu_us": 65.24200000000002,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "pp.pickle_metadata",
+        "count": 1,
+        "cpu_total_us": 293910.897,
+        "self_cpu_us": 293910.897,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "cudaDeviceSynchronize",
+        "count": 2,
+        "cpu_total_us": 39.21099999995204,
+        "self_cpu_us": 39.21099999995204,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      }
+    ]
+  },
+  {
+    "case": "cpu_view32k_b25",
+    "arm": "fixed",
+    "pickle_bytes": 20609,
+    "events": [
+      {
+        "key": "pp.prepare_metadata",
+        "count": 1,
+        "cpu_total_us": 1046.595,
+        "self_cpu_us": 535.5459999999987,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 6000
+      },
+      {
+        "key": "aten::to",
+        "count": 50,
+        "cpu_total_us": 18.379999999999598,
+        "self_cpu_us": 18.379999999999598,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "aten::clone",
+        "count": 50,
+        "cpu_total_us": 380.03400000000045,
+        "self_cpu_us": 216.43600000000083,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 6000
+      },
+      {
+        "key": "aten::copy_",
+        "count": 50,
+        "cpu_total_us": 96.86799999999994,
+        "self_cpu_us": 96.86799999999994,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "pp.split_top_level",
+        "count": 1,
+        "cpu_total_us": 29.299999999999955,
+        "self_cpu_us": 29.299999999999955,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "pp.pickle_metadata",
+        "count": 1,
+        "cpu_total_us": 2284.416,
+        "self_cpu_us": 2284.416,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "cudaDeviceSynchronize",
+        "count": 2,
+        "cpu_total_us": 34.31600000000071,
+        "self_cpu_us": 34.31600000000071,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      }
+    ]
+  },
+  {
+    "case": "cuda_rows_b25",
+    "arm": "base",
+    "pickle_bytes": 164851,
+    "events": [
+      {
+        "key": "pp.prepare_metadata",
+        "count": 1,
+        "cpu_total_us": 68.35399999999998,
+        "self_cpu_us": 68.35399999999998,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "pp.split_top_level",
+        "count": 1,
+        "cpu_total_us": 64.875,
+        "self_cpu_us": 64.875,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "pp.pickle_metadata",
+        "count": 1,
+        "cpu_total_us": 6092.706,
+        "self_cpu_us": 3325.312,
+        "device_total_us": 185.41100000000347,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "aten::to",
+        "count": 50,
+        "cpu_total_us": 2767.3940000000002,
+        "self_cpu_us": 105.49300000000267,
+        "device_total_us": 185.41100000000347,
+        "cpu_memory_bytes": 150000
+      },
+      {
+        "key": "aten::_to_copy",
+        "count": 50,
+        "cpu_total_us": 2661.900999999998,
+        "self_cpu_us": 222.33199999999806,
+        "device_total_us": 185.41100000000347,
+        "cpu_memory_bytes": 150000
+      },
+      {
+        "key": "aten::copy_",
+        "count": 50,
+        "cpu_total_us": 2361.3549999999996,
+        "self_cpu_us": 360.81600000000003,
+        "device_total_us": 185.41100000000347,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "cudaMemcpyAsync",
+        "count": 50,
+        "cpu_total_us": 1475.1649999999988,
+        "self_cpu_us": 1475.1649999999988,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "pp.pickle_metadata",
+        "count": 1,
+        "cpu_total_us": 0,
+        "self_cpu_us": 0,
+        "device_total_us": 4721.263,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "Memcpy DtoH (Device -> Pageable)",
+        "count": 50,
+        "cpu_total_us": 0,
+        "self_cpu_us": 0,
+        "device_total_us": 185.41100000000347,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "cudaStreamSynchronize",
+        "count": 50,
+        "cpu_total_us": 141.1860000000015,
+        "self_cpu_us": 141.1860000000015,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "cudaDeviceSynchronize",
+        "count": 2,
+        "cpu_total_us": 11.740999999999985,
+        "self_cpu_us": 11.740999999999985,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      }
+    ]
+  },
+  {
+    "case": "cuda_rows_b25",
+    "arm": "fixed",
+    "pickle_bytes": 20609,
+    "events": [
+      {
+        "key": "pp.prepare_metadata",
+        "count": 1,
+        "cpu_total_us": 3631.373,
+        "self_cpu_us": 896.0930000000003,
+        "device_total_us": 175.7750000000001,
+        "cpu_memory_bytes": 6000
+      },
+      {
+        "key": "aten::to",
+        "count": 50,
+        "cpu_total_us": 2343.8940000000002,
+        "self_cpu_us": 73.99300000000142,
+        "device_total_us": 175.7750000000001,
+        "cpu_memory_bytes": 6000
+      },
+      {
+        "key": "aten::_to_copy",
+        "count": 50,
+        "cpu_total_us": 2269.900999999999,
+        "self_cpu_us": 168.36299999999824,
+        "device_total_us": 175.7750000000001,
+        "cpu_memory_bytes": 6000
+      },
+      {
+        "key": "aten::copy_",
+        "count": 100,
+        "cpu_total_us": 2115.978,
+        "self_cpu_us": 345.34100000000194,
+        "device_total_us": 175.7750000000001,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "cudaMemcpyAsync",
+        "count": 50,
+        "cpu_total_us": 1381.2389999999982,
+        "self_cpu_us": 1381.2389999999982,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "pp.prepare_metadata",
+        "count": 1,
+        "cpu_total_us": 0,
+        "self_cpu_us": 0,
+        "device_total_us": 2259.9840000000004,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "Memcpy DtoH (Device -> Pageable)",
+        "count": 50,
+        "cpu_total_us": 0,
+        "self_cpu_us": 0,
+        "device_total_us": 175.7750000000001,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "cudaStreamSynchronize",
+        "count": 50,
+        "cpu_total_us": 134.10199999999963,
+        "self_cpu_us": 134.10199999999963,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "aten::clone",
+        "count": 50,
+        "cpu_total_us": 287.8179999999991,
+        "self_cpu_us": 161.32499999999732,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 6000
+      },
+      {
+        "key": "pp.split_top_level",
+        "count": 1,
+        "cpu_total_us": 45.42100000000028,
+        "self_cpu_us": 45.42100000000028,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "pp.pickle_metadata",
+        "count": 1,
+        "cpu_total_us": 2178.1710000000003,
+        "self_cpu_us": 2178.1710000000003,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "cudaDeviceSynchronize",
+        "count": 2,
+        "cpu_total_us": 13.88799999999992,
+        "self_cpu_us": 13.88799999999992,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      }
+    ]
+  },
+  {
+    "case": "cuda_view32k_b25",
+    "arm": "base",
+    "pickle_bytes": 196623509,
+    "events": [
+      {
+        "key": "pp.prepare_metadata",
+        "count": 1,
+        "cpu_total_us": 54.27799999999999,
+        "self_cpu_us": 54.27799999999999,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "pp.split_top_level",
+        "count": 1,
+        "cpu_total_us": 36.90500000000003,
+        "self_cpu_us": 36.90500000000003,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "pp.pickle_metadata",
+        "count": 1,
+        "cpu_total_us": 437468.575,
+        "self_cpu_us": 289893.43799999997,
+        "device_total_us": 80559.96000000005,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "aten::to",
+        "count": 50,
+        "cpu_total_us": 147575.13700000005,
+        "self_cpu_us": 129.05200000015066,
+        "device_total_us": 80559.96000000005,
+        "cpu_memory_bytes": 196608000
+      },
+      {
+        "key": "aten::_to_copy",
+        "count": 50,
+        "cpu_total_us": 147446.0849999999,
+        "self_cpu_us": 429.1539999995939,
+        "device_total_us": 80559.96000000005,
+        "cpu_memory_bytes": 196608000
+      },
+      {
+        "key": "aten::copy_",
+        "count": 50,
+        "cpu_total_us": 146381.6400000001,
+        "self_cpu_us": 718.0329999997784,
+        "device_total_us": 80559.96000000005,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "cudaMemcpyAsync",
+        "count": 50,
+        "cpu_total_us": 143029.633,
+        "self_cpu_us": 143029.633,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "pp.pickle_metadata",
+        "count": 1,
+        "cpu_total_us": 0,
+        "self_cpu_us": 0,
+        "device_total_us": 399516.424,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "Memcpy DtoH (Device -> Pageable)",
+        "count": 50,
+        "cpu_total_us": 0,
+        "self_cpu_us": 0,
+        "device_total_us": 80559.96000000005,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "cudaStreamSynchronize",
+        "count": 50,
+        "cpu_total_us": 213.6950000002853,
+        "self_cpu_us": 213.6950000002853,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "cudaDeviceSynchronize",
+        "count": 2,
+        "cpu_total_us": 19.180000000051223,
+        "self_cpu_us": 19.180000000051223,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      }
+    ]
+  },
+  {
+    "case": "cuda_view32k_b25",
+    "arm": "fixed",
+    "pickle_bytes": 20609,
+    "events": [
+      {
+        "key": "pp.prepare_metadata",
+        "count": 1,
+        "cpu_total_us": 5160.210999999999,
+        "self_cpu_us": 500.77100000000246,
+        "device_total_us": 176.5790000000011,
+        "cpu_memory_bytes": 6000
+      },
+      {
+        "key": "aten::to",
+        "count": 50,
+        "cpu_total_us": 4278.948,
+        "self_cpu_us": 71.54400000000078,
+        "device_total_us": 176.5790000000011,
+        "cpu_memory_bytes": 6000
+      },
+      {
+        "key": "aten::_to_copy",
+        "count": 50,
+        "cpu_total_us": 4207.4039999999995,
+        "self_cpu_us": 165.8000000000011,
+        "device_total_us": 176.5790000000011,
+        "cpu_memory_bytes": 6000
+      },
+      {
+        "key": "aten::copy_",
+        "count": 100,
+        "cpu_total_us": 4051.2079999999955,
+        "self_cpu_us": 336.49099999999316,
+        "device_total_us": 176.5790000000011,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "cudaMemcpyAsync",
+        "count": 50,
+        "cpu_total_us": 1264.4670000000028,
+        "self_cpu_us": 1264.4670000000028,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "pp.prepare_metadata",
+        "count": 1,
+        "cpu_total_us": 0,
+        "self_cpu_us": 0,
+        "device_total_us": 2256.553,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "Memcpy DtoH (Device -> Pageable)",
+        "count": 50,
+        "cpu_total_us": 0,
+        "self_cpu_us": 0,
+        "device_total_us": 176.5790000000011,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "cudaStreamSynchronize",
+        "count": 50,
+        "cpu_total_us": 132.41199999999935,
+        "self_cpu_us": 132.41199999999935,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "aten::clone",
+        "count": 50,
+        "cpu_total_us": 281.53399999999965,
+        "self_cpu_us": 157.72500000000446,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 6000
+      },
+      {
+        "key": "pp.split_top_level",
+        "count": 1,
+        "cpu_total_us": 41.73400000000038,
+        "self_cpu_us": 41.73400000000038,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "pp.pickle_metadata",
+        "count": 1,
+        "cpu_total_us": 2317.791,
+        "self_cpu_us": 2317.791,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "cudaDeviceSynchronize",
+        "count": 2,
+        "cpu_total_us": 15.34100000000035,
+        "self_cpu_us": 15.34100000000035,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      }
+    ]
+  },
+  {
+    "case": "python_prompt_top20_32k",
+    "arm": "base",
+    "pickle_bytes": 9308003,
+    "events": [
+      {
+        "key": "pp.prepare_metadata",
+        "count": 1,
+        "cpu_total_us": 68.07199999999997,
+        "self_cpu_us": 68.07199999999997,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "pp.split_top_level",
+        "count": 1,
+        "cpu_total_us": 46.24000000000001,
+        "self_cpu_us": 46.24000000000001,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "pp.pickle_metadata",
+        "count": 1,
+        "cpu_total_us": 37801.64,
+        "self_cpu_us": 37801.64,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "cudaDeviceSynchronize",
+        "count": 2,
+        "cpu_total_us": 34.417999999997846,
+        "self_cpu_us": 34.417999999997846,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      }
+    ]
+  },
+  {
+    "case": "python_prompt_top20_32k",
+    "arm": "fixed",
+    "pickle_bytes": 9308003,
+    "events": [
+      {
+        "key": "pp.prepare_metadata",
+        "count": 1,
+        "cpu_total_us": 363011.32800000004,
+        "self_cpu_us": 363011.32800000004,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "pp.split_top_level",
+        "count": 1,
+        "cpu_total_us": 82.2269999999553,
+        "self_cpu_us": 82.2269999999553,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "pp.pickle_metadata",
+        "count": 1,
+        "cpu_total_us": 38161.668999999994,
+        "self_cpu_us": 38161.668999999994,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      },
+      {
+        "key": "cudaDeviceSynchronize",
+        "count": 2,
+        "cpu_total_us": 31.21799999999348,
+        "self_cpu_us": 31.21799999999348,
+        "device_total_us": 0,
+        "cpu_memory_bytes": 0
+      }
+    ]
+  }
+]
