@@ -1,0 +1,62 @@
+[
+  {
+    "case": "single_1k",
+    "shape": [
+      1369,
+      7168
+    ],
+    "max_abs": 0.0,
+    "mean_abs": 0.0,
+    "exact": true
+  },
+  {
+    "case": "temporal_pool",
+    "shape": [
+      285,
+      7168
+    ],
+    "max_abs": 0.0,
+    "mean_abs": 0.0,
+    "exact": true
+  },
+  {
+    "case": "ten_1k",
+    "shape": [
+      13690,
+      7168
+    ],
+    "max_abs": 0.0,
+    "mean_abs": 0.0,
+    "exact": true
+  },
+  {
+    "case": "twenty_1k",
+    "shape": [
+      27380,
+      7168
+    ],
+    "max_abs": 0.0,
+    "mean_abs": 0.0,
+    "exact": true
+  },
+  {
+    "case": "two_1k",
+    "shape": [
+      2738,
+      7168
+    ],
+    "max_abs": 0.0,
+    "mean_abs": 0.0,
+    "exact": true
+  },
+  {
+    "case": "uneven_three",
+    "shape": [
+      7482,
+      7168
+    ],
+    "max_abs": 0.0,
+    "mean_abs": 0.0,
+    "exact": true
+  }
+]

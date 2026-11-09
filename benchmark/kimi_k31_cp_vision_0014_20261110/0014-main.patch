@@ -1,0 +1,286 @@
+diff --git a/python/sglang/srt/models/kimi_k3.py b/python/sglang/srt/models/kimi_k3.py
+index 65c8d4c6a1eb801d8cbbdcfbc34f1f99fe64d83e..6b3d3f9f8e583277032a1becc28f6abcd6ef0739 100644
+--- a/python/sglang/srt/models/kimi_k3.py
++++ b/python/sglang/srt/models/kimi_k3.py
+@@ -4183,6 +4183,14 @@ class KimiK3ForConditionalGeneration(nn.Module):
+         if self.use_data_parallel:
+             from sglang.srt.multimodal.mm_utils import run_dp_sharded_mrope_vision_model
+ 
++            parallel = get_parallel()
++            # Before token sharding, CP peers own the same images. Share ViT
++            # work across them without changing the language-model TP groups.
++            vision_dp_group = (
++                parallel.tp_group
++                if parallel.attn_cp_size > 1 and parallel.attn_dp_size == 1
++                else None
++            )
+             image_embeds = run_dp_sharded_mrope_vision_model(
+                 self.vision_tower,
+                 None,
+@@ -4196,6 +4204,7 @@ class KimiK3ForConditionalGeneration(nn.Module):
+                 load_local_pixel_values=materialize_item_features,
+                 pixel_values_device=device,
+                 pixel_values_dtype=target_dtype,
++                parallel_group=vision_dp_group,
+             )
+             return self.mm_projector(image_embeds)
+ 
+diff --git a/python/sglang/srt/multimodal/mm_utils.py b/python/sglang/srt/multimodal/mm_utils.py
+index d46d56c9685218f409ba1297b41171d667170ec6..664bd94448b90e50d1241e2c3f99e878569f0227 100644
+--- a/python/sglang/srt/multimodal/mm_utils.py
++++ b/python/sglang/srt/multimodal/mm_utils.py
+@@ -570,6 +570,7 @@ def run_dp_sharded_mrope_vision_model(
+     pixel_values_device: Optional[torch.device] = None,
+     pixel_values_dtype: Optional[torch.dtype] = None,
+     pass_grid_thw_list: bool = False,
++    parallel_group=None,
+ ):
+     """Run a vision model with data parallelism (DP) sharding.
+     The function will shard the input image tensor on the
+@@ -591,6 +592,7 @@ def run_dp_sharded_mrope_vision_model(
+                    the spatial merge area instead of t * h * w divided by it.
+         pass_grid_thw_list: Forward the existing host grid list to the vision
+             model so graph-aware towers do not materialize it from a CUDA tensor.
++        parallel_group: Image-DP group; defaults to the attention-TP group.
+     Returns:
+         torch.Tensor: Output image embeddings
+ 
+@@ -617,7 +619,11 @@ def run_dp_sharded_mrope_vision_model(
+             "pixel_values_device and pixel_values_dtype are required with a local loader"
+         )
+ 
+-    tp_size = get_parallel().attn_tp_size
++    tp_size = (
++        get_parallel().attn_tp_size
++        if parallel_group is None
++        else parallel_group.world_size
++    )
+     if tp_size == 1:
+         if pixel_values is None:
+             pixel_values = load_local_pixel_values(list(range(len(grid_thw_list))))
+@@ -651,7 +657,13 @@ def run_dp_sharded_mrope_vision_model(
+ 
+     # GPU_0 tp_rank_local = 0
+     # GPU_1 tp_rank_local = 1
+-    tp_rank_local = get_parallel().attn_tp_rank
++    tp_rank_local = (
++        get_parallel().attn_tp_rank
++        if parallel_group is None
++        else parallel_group.rank_in_group
++    )
++    if parallel_group is None:
++        parallel_group = get_parallel().attn_tp_group
+ 
+     # patches_per_image = [1000, 100, 200, 50]
+     patches_per_image = [math.prod(grid_thw) for grid_thw in grid_thw_list]
+@@ -786,7 +798,7 @@ def run_dp_sharded_mrope_vision_model(
+                 dtype=input_dtype,
+                 device=input_device,
+             )
+-        get_parallel().attn_tp_group.broadcast(out_embeddings, src=owner_local)
++        parallel_group.broadcast(out_embeddings, src=owner_local)
+         return out_embeddings
+ 
+     # The TP all-gather needs a common first dimension. Allocate that final
+@@ -796,9 +808,7 @@ def run_dp_sharded_mrope_vision_model(
+     )
+ 
+     # Do all_gather to collect embeddings from all ranks
+-    gathered_embeds = get_parallel().attn_tp_group.all_gather(
+-        image_embeds_local_padded, dim=0
+-    )
++    gathered_embeds = parallel_group.all_gather(image_embeds_local_padded, dim=0)
+ 
+     # Remove padding and reconstruct per-rank embeddings
+     rank_embeddings = list[torch.Tensor]()
+diff --git a/test/registered/unit/multimodal/test_kimi_k3_pcp_vision_dp.py b/test/registered/unit/multimodal/test_kimi_k3_pcp_vision_dp.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..417ebeccddbd9d3481acf4fe14e6dbac61635bf1
+--- /dev/null
++++ b/test/registered/unit/multimodal/test_kimi_k3_pcp_vision_dp.py
+@@ -0,0 +1,185 @@
++"""CPU coverage for image-DP across Kimi's prefill-CP peers."""
++
++from types import SimpleNamespace
++
++import pytest
++import torch
++
++from sglang.srt.managers import mm_schedule
++from sglang.srt.managers.req_types import MultimodalDataItem
++from sglang.srt.mem_cache.multimodal_cache import MultiModalStaticCache
++from sglang.srt.models import kimi_k3
++from sglang.srt.multimodal.mm_utils import run_dp_sharded_mrope_vision_model
++from sglang.srt.multimodal.modality import Modality
++from sglang.srt.runtime_context import get_parallel
++from sglang.test.ci.ci_register import register_cpu_ci
++
++register_cpu_ci(est_time=5, suite="base-a-test-cpu")
++
++
++class _Tower:
++    device = torch.device("cpu")
++    merge_kernel_size = (1, 1)
++    config = SimpleNamespace(hidden_size=1)
++    patch_embed = SimpleNamespace(proj=SimpleNamespace(weight=torch.empty(1)))
++
++    def __init__(self):
++        self.calls = 0
++
++    def __call__(self, pixels, **_kwargs):
++        self.calls += 1
++        return pixels.reshape(-1, 1, 1)
++
++
++class _ImageGroup:
++    world_size = 2
++
++    def __init__(self, rank, features, shards):
++        self.rank_in_group = rank
++        self.features = features
++        self.shards = shards
++        self.collectives = 0
++
++    def broadcast(self, tensor, src):
++        assert src == 0
++        tensor.copy_(self.features[0].reshape(-1, 1, 1))
++        self.collectives += 1
++
++    def all_gather(self, tensor, dim):
++        packed = []
++        for rank, indices in enumerate(self.shards):
++            expected = torch.cat([self.features[i] for i in indices]).reshape(-1, 1, 1)
++            if rank == self.rank_in_group:
++                torch.testing.assert_close(tensor[: len(expected)], expected)
++            padded = torch.zeros_like(tensor)
++            padded[: len(expected)] = expected
++            packed.append(padded)
++        self.collectives += 1
++        return torch.cat(packed, dim=dim)
++
++
++@pytest.mark.parametrize(
++    "sizes,shards", [([4], [[0], []]), ([4, 4], [[0], [1]]), ([4, 2, 1], [[0], [1, 2]])]
++)
++@pytest.mark.parametrize("rank", [0, 1])
++def test_pcp_image_group_encodes_each_image_once_and_restores_order(
++    rank, sizes, shards
++):
++    features = [torch.full((n, 1), float(i + 1)) for i, n in enumerate(sizes)]
++    group = _ImageGroup(rank, features, shards)
++    tower = _Tower()
++    loaded = []
++
++    def load(indices):
++        loaded.extend(indices)
++        return torch.cat([features[i] for i in indices])
++
++    # Each CP peer has singleton attention TP, but shares this image-DP group.
++    with get_parallel().override(attn_tp_size=1, attn_tp_rank=0):
++        output = run_dp_sharded_mrope_vision_model(
++            tower,
++            None,
++            [[1, 1, n] for n in sizes],
++            rope_type="rope_2d",
++            load_local_pixel_values=load,
++            pixel_values_device=torch.device("cpu"),
++            pixel_values_dtype=torch.float32,
++            parallel_group=group,
++        )
++
++    assert loaded == shards[rank]
++    assert tower.calls == bool(shards[rank])
++    assert group.collectives == 1
++    torch.testing.assert_close(output, torch.cat(features).reshape(-1, 1, 1))
++
++
++@pytest.mark.parametrize(
++    "cp,dp,use_tp_group", [(2, 1, True), (1, 1, False), (2, 2, False)]
++)
++def test_kimi_only_selects_full_tp_for_replicated_cp_images(
++    monkeypatch, cp, dp, use_tp_group
++):
++    group = object()
++    monkeypatch.setattr(
++        kimi_k3,
++        "get_parallel",
++        lambda: SimpleNamespace(attn_cp_size=cp, attn_dp_size=dp, tp_group=group),
++    )
++    model = kimi_k3.KimiK3ForConditionalGeneration.__new__(
++        kimi_k3.KimiK3ForConditionalGeneration
++    )
++    torch.nn.Module.__init__(model)
++    model.use_data_parallel = True
++    model.vision_tower = _Tower()
++    model.mm_projector = torch.nn.Identity()
++    expected = torch.ones(1, 1)
++
++    def run_dp(*_args, parallel_group, **_kwargs):
++        assert parallel_group is (group if use_tp_group else None)
++        return expected
++
++    monkeypatch.setattr(
++        "sglang.srt.multimodal.mm_utils.run_dp_sharded_mrope_vision_model", run_dp
++    )
++    item = SimpleNamespace(model_specific_data={"grid_thws": torch.tensor([[1, 1, 1]])})
++    assert model.get_image_feature([item]) is expected
++
++
++@pytest.mark.parametrize("rank", [0, 1])
++def test_replicated_cache_cold_hot_partial_and_empty_chunks(monkeypatch, rank):
++    cache = MultiModalStaticCache(1024)
++    monkeypatch.setattr(mm_schedule, "embedding_cache", cache)
++    items = [
++        MultimodalDataItem(
++            modality=Modality.IMAGE,
++            hash=i,
++            offsets=[(i * 4, i * 4 + 3)],
++            feature=torch.full((4, 1), float(i + 1)),
++        )
++        for i in range(2)
++    ]
++    request = mm_schedule.PerImageRequestInfo(0, items, [(0, 3), (4, 7)], 0, 8)
++    encoded = []
++
++    def encode(misses):
++        encoded.append([item.hash for item in misses])
++        features = [item.feature for item in misses]
++        shards = [[0], []] if len(misses) == 1 else [[0], [1]]
++        return run_dp_sharded_mrope_vision_model(
++            _Tower(),
++            torch.cat(features),
++            [[1, 1, 4]] * len(misses),
++            rope_type="rope_2d",
++            parallel_group=_ImageGroup(rank, features, shards),
++        )
++
++    with get_parallel().override(attn_tp_size=1, attn_tp_rank=0):
++        cold = mm_schedule._batch_encode_per_image_misses(
++            encode, [request], torch.device("cpu")
++        )
++        hot = mm_schedule._batch_encode_per_image_misses(
++            encode, [request], torch.device("cpu")
++        )
++        assert encoded == [[0, 1]]
++        assert cold.keys() == hot.keys()
++        for key in cold:
++            torch.testing.assert_close(cold[key], hot[key])
++        cache.free(items[0].cache_key, None)
++        partial = mm_schedule._batch_encode_per_image_misses(
++            encode, [request], torch.device("cpu")
++        )
++        assert encoded == [[0, 1], [0]]
++        for key in cold:
++            torch.testing.assert_close(cold[key], partial[key])
++        request.extend_seq_len = 0
++        assert (
++            mm_schedule._batch_encode_per_image_misses(
++                encode, [request], torch.device("cpu")
++            )
++            == {}
++        )
++        assert encoded == [[0, 1], [0]]
++
++
++if __name__ == "__main__":
++    raise SystemExit(pytest.main([__file__]))

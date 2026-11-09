@@ -1,0 +1,28 @@
+{
+  "base_sha": "704681229f1cdda291dbd2261dabb2ae80a4a49d",
+  "patch_sha256": "83340115d4cc7d6f262ded6e1f6fef64e2135069642e1728d52d5763c7cc1d6e",
+  "precommit": "All applicable changed-file repository hooks passed",
+  "direct_ci_entrypoint": "11 passed with GPUs hidden",
+  "hosts": [
+    {
+      "label": "host-a",
+      "order": [
+        "upstream",
+        "pr2-main"
+      ],
+      "tests_passed": 109,
+      "subtests_passed": 4,
+      "exact_gpu_cases": 6
+    },
+    {
+      "label": "host-b",
+      "order": [
+        "pr2-main",
+        "upstream"
+      ],
+      "tests_passed": 109,
+      "subtests_passed": 4,
+      "exact_gpu_cases": 6
+    }
+  ]
+}

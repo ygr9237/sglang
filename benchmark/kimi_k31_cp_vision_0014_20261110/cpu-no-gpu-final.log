@@ -1,0 +1,16 @@
+........................................................................ [ 66%]
+.....................................                                [100%]
+=============================== warnings summary ===============================
+python/sglang/srt/layers/quantization/awq/awq.py:53
+  /data/k31_pr14_release_20261109/pr2-main/python/sglang/srt/layers/quantization/awq/awq.py:53: UserWarning: Only CUDA, HIP and XPU support AWQ currently.
+    warnings.warn(f"Only CUDA, HIP and XPU support AWQ currently.")
+
+<frozen abc>:106
+  <frozen abc>:106: DeprecationWarning: MultiPlatformOp is deprecated; subclass sglang.kernels.fused_op.BaseFusedOp instead (RFC #29630).
+
+python/sglang/kernels/ops/attention/fla/utils.py:223
+  /data/k31_pr14_release_20261109/pr2-main/python/sglang/kernels/ops/attention/fla/utils.py:223: UserWarning: Triton is not supported on current platform, roll back to CPU.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+109 passed, 3 warnings, 4 subtests passed in 17.98s
