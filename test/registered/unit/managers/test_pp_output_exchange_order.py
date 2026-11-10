@@ -87,6 +87,38 @@ def _posted_output_ops(pp_rank, spec_relay, send_msg, recv_msg, **server_args):
 
 
 class TestPPOutputExchangeOrder(CustomTestCase):
+    def test_numeric_metadata_lists_keep_independent_containers(self):
+        from sglang.srt.managers.scheduler_pp_mixin import _pp_freeze_output_metadata
+
+        for values in ([], [1, 2], [1.25, 2.5], [1, 2.5]):
+            with self.subTest(values=values):
+                expected = values.copy()
+                frozen = _pp_freeze_output_metadata(values)
+                self.assertIsNot(frozen, values)
+                self.assertEqual(frozen, expected)
+                values.append(99)
+                values[0] = -1
+                self.assertEqual(frozen, expected)
+
+    def test_numeric_prefix_does_not_hide_a_later_tensor(self):
+        from sglang.srt.managers.scheduler_pp_mixin import _pp_freeze_output_metadata
+
+        for dtype in (torch.float32, torch.int64):
+            with self.subTest(dtype=dtype):
+                base = torch.arange(100000, dtype=dtype)
+                view = base.view(10000, 10)[5:7, :2]
+                expected = view.clone()
+                frozen = _pp_freeze_output_metadata([7, view])
+                self.assertEqual(frozen[0], 7)
+                self.assertEqual(frozen[1].shape, view.shape)
+                self.assertEqual(frozen[1].dtype, dtype)
+                self.assertEqual(
+                    frozen[1].untyped_storage().nbytes(),
+                    view.numel() * view.element_size(),
+                )
+                base.zero_()
+                torch.testing.assert_close(frozen[1], expected)
+
     def test_nested_logprob_views_serialize_only_their_own_storage(self):
         """A tiny PP logprob row must not serialize or retain its large base."""
         bases = [torch.arange(100000, dtype=d) for d in (torch.float32, torch.int64)]

@@ -55,8 +55,11 @@ def _pp_freeze_output_metadata(value):
                 "on the forward stream before CPU serialization."
             )
         # A small CPU view would otherwise pickle its entire backing storage.
-        return value.detach().to(device="cpu", non_blocking=False).clone()
+        return value.detach().to(device="cpu", copy=True, non_blocking=False)
     if isinstance(value, list):
+        # Snapshot numeric logprob rows without recursing into every scalar.
+        if all(type(item) in (int, float) for item in value):
+            return value.copy()
         return [_pp_freeze_output_metadata(item) for item in value]
     if isinstance(value, tuple):
         return tuple(_pp_freeze_output_metadata(item) for item in value)

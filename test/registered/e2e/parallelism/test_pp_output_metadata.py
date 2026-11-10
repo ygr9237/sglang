@@ -18,6 +18,26 @@ register_cuda_ci(est_time=5, stage="base-b", runner_config="1-gpu-small")
 
 class TestPPOutputMetadata(CustomTestCase):
     @unittest.skipUnless(torch.cuda.is_available(), "CUDA is required")
+    def test_mixed_numeric_and_strided_cuda_metadata(self):
+        from sglang.srt.managers.scheduler_pp_mixin import _pp_freeze_output_metadata
+
+        forward = torch.cuda.Stream()
+        comm = torch.cuda.Stream()
+        with torch.cuda.stream(forward):
+            base = torch.arange(100000, dtype=torch.float32, device="cuda")
+            view = base.view(10000, 10)[5:7, :2]
+            frozen = _pp_freeze_output_metadata([7, view])
+            base.zero_()
+        with torch.cuda.stream(comm):
+            self.assertEqual(frozen[0], 7)
+            self.assertEqual(frozen[1].device.type, "cpu")
+            self.assertEqual(frozen[1].shape, (2, 2))
+            self.assertEqual(frozen[1].untyped_storage().nbytes(), 16)
+            restored = pickle.loads(pickle.dumps(frozen))
+            self.assertEqual(restored[1].tolist(), [[50, 51], [60, 61]])
+        forward.synchronize()
+
+    @unittest.skipUnless(torch.cuda.is_available(), "CUDA is required")
     def test_nested_cuda_views_are_ready_before_communication(self):
         forward = torch.cuda.Stream()
         comm = torch.cuda.Stream()
