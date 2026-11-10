@@ -1,0 +1,31 @@
+/source/python/sglang/srt/layers/quantization/awq/awq.py:53: UserWarning: Only CUDA, HIP and XPU support AWQ currently.
+  warnings.warn(f"Only CUDA, HIP and XPU support AWQ currently.")
+============================= test session starts ==============================
+platform linux -- Python 3.12.16, pytest-9.2.0, pluggy-1.7.0
+rootdir: /source/test/registered/unit/multimodal
+plugins: typeguard-4.4.4, anyio-4.16.0, ai-dynamo-1.6.0, jaxtyping-0.3.11, platformdirs-4.13.6
+collected 11 items
+
+../../source/test/registered/unit/multimodal/test_kimi_k3_pcp_vision_dp.py . [  9%]
+..........                                                               [100%]
+
+=============================== warnings summary ===============================
+../../opt/sglang/lib/python3.12/site-packages/_pytest/config/__init__.py:1507
+  /opt/sglang/lib/python3.12/site-packages/_pytest/config/__init__.py:1507: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; anyio
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+../../opt/sglang/lib/python3.12/site-packages/_pytest/config/__init__.py:1507
+  /opt/sglang/lib/python3.12/site-packages/_pytest/config/__init__.py:1507: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; triton
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+../../opt/sglang/lib/python3.12/site-packages/_pytest/config/__init__.py:1507
+  /opt/sglang/lib/python3.12/site-packages/_pytest/config/__init__.py:1507: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; sglang
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+../../opt/sglang/lib/python3.12/site-packages/_pytest/cacheprovider.py:487
+  /opt/sglang/lib/python3.12/site-packages/_pytest/cacheprovider.py:487: PytestCacheWarning: could not create cache path /source/test/registered/unit/multimodal/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/source/test/registered/unit/multimodal/pytest-cache-files-rgvwqb32'
+    config.cache.set("cache/nodeids", sorted(str(n) for n in self.cached_nodeids))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 11 passed, 4 warnings in 0.04s ========================
+sys:1: DeprecationWarning: builtin type swigvarlink has no __module__ attribute

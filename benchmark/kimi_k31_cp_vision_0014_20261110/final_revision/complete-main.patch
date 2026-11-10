@@ -1,0 +1,1226 @@
+diff --git a/python/sglang/srt/managers/mm_schedule.py b/python/sglang/srt/managers/mm_schedule.py
+--- a/python/sglang/srt/managers/mm_schedule.py
++++ b/python/sglang/srt/managers/mm_schedule.py
+@@ -2,6 +2,7 @@
+ 
+ import logging
+ from abc import ABC, abstractmethod
++from contextlib import nullcontext
+ from dataclasses import dataclass, field
+ from typing import Callable, Dict, List, Optional, Tuple
+ 
+@@ -10,6 +11,10 @@
+ from sglang.srt.managers.req_types import MultimodalDataItem
+ from sglang.srt.mem_cache.multimodal_cache import EmbeddingResult, MultiModalStaticCache
+ from sglang.srt.multimodal.evs import EVSEmbeddingResult
++from sglang.srt.multimodal.image_dp_consensus import (
++    image_dp_coordinator,
++    image_dp_group,
++)
+ from sglang.srt.multimodal.transport.cuda_ipc import BORROW_CUDA_IPC_FEATURE_KEY
+ from sglang.srt.runtime_context import get_schedule
+ from sglang.srt.utils import is_hip, is_npu, is_xpu
+@@ -337,19 +342,28 @@
+             )
+             embedding_per_req = None
+ 
++    coordinator = image_dp_coordinator(data_embedding_func)
++    if coordinator is not None:
++        descriptor = ("full", tuple(item_hashes), tuple(items_offset))
++        if coordinator.reconcile((descriptor,), [embedding_per_req is None])[0]:
++            if embedding_per_req is not None:
++                embedding_cache.free(embedding_items_hash, None)
++            embedding_per_req = None
++
+     if embedding_per_req is None:
+-        _move_items_to_device(embedding_items_per_req, device, data_embedding_func)
+-        embedding = data_embedding_func(embedding_items_per_req)
+-        if isinstance(embedding, list):
+-            # This path caches the combined per-request embedding, so the
+-            # per-item form is flattened here.
+-            embedding = _flatten_embedding_result(embedding)
+-        embedding_per_req = (
+-            EmbeddingResult(embedding=embedding)
+-            if isinstance(embedding, torch.Tensor)
+-            else embedding
+-        )
+-        embedding_cache.set(embedding_items_hash, embedding_per_req)
++        with coordinator.encoding() if coordinator is not None else nullcontext():
++            _move_items_to_device(embedding_items_per_req, device, data_embedding_func)
++            embedding = data_embedding_func(embedding_items_per_req)
++            if isinstance(embedding, list):
++                # This path caches the combined per-request embedding, so the
++                # per-item form is flattened here.
++                embedding = _flatten_embedding_result(embedding)
++            embedding_per_req = (
++                EmbeddingResult(embedding=embedding)
++                if isinstance(embedding, torch.Tensor)
++                else embedding
++            )
++            embedding_cache.set(embedding_items_hash, embedding_per_req)
+ 
+     # cache hits keep raw-input leases until request cleanup for eviction/re-prefill
+ 
+@@ -405,6 +419,9 @@
+     hash_to_embedding: Dict[Tuple[bytes, int], torch.Tensor] = {}
+ 
+     prefetched = _prefetched_source(data_embedding_func)
++    coordinator = image_dp_coordinator(data_embedding_func)
++    all_items = {}
++
+     # Phase 1a: find overlapping items per request and collect cache misses
+     for req_info in per_image_requests:
+         chunk_start = req_info.extend_prefix_len
+@@ -419,6 +436,8 @@
+ 
+         for _idx, item, expected_token_count in overlapping:
+             cache_key = (item.cache_key, expected_token_count)
++            if coordinator is not None:
++                all_items.setdefault(cache_key, (item, expected_token_count))
+             if cache_key in hash_to_embedding:
+                 continue
+             if prefetched is not None:
+@@ -446,39 +465,50 @@
+                     item.model_specific_data[BORROW_CUDA_IPC_FEATURE_KEY] = True
+                 unique_misses[cache_key] = (item, expected_token_count)
+ 
++    if coordinator is not None:
++        keys = tuple(all_items)
++        missing = coordinator.reconcile(keys, [key in unique_misses for key in keys])
++        unique_misses = {
++            key: all_items[key] for key, miss in zip(keys, missing) if miss
++        }
++        for key in unique_misses:
++            if hash_to_embedding.pop(key, None) is not None:
++                embedding_cache.free(key[0], None)
++
+     # Phase 1b: single ViT call for all unique cache misses
+     if unique_misses:
+-        ordered_cache_keys = list(unique_misses.keys())
+-        miss_items = [unique_misses[key][0] for key in ordered_cache_keys]
+-        token_counts = [unique_misses[key][1] for key in ordered_cache_keys]
+-
+-        _move_items_to_device(miss_items, device, data_embedding_func)
+-        all_miss_embedding = data_embedding_func(miss_items)
+-
+-        if isinstance(all_miss_embedding, list):
+-            # Per-item embeddings: no split needed, and each cache entry owns
+-            # its storage (a torch.split view would pin the whole concatenated
+-            # buffer for as long as any single item stays cached). Mirrors
+-            # _get_chunked_embedding_by_item.
+-            assert len(all_miss_embedding) == len(miss_items), (
+-                f"per-item embedding count {len(all_miss_embedding)} != "
+-                f"cache-miss item count {len(miss_items)}"
+-            )
+-            split_embeddings = [
+-                emb.reshape(-1, emb.shape[-1]) for emb in all_miss_embedding
+-            ]
+-        else:
+-            all_miss_embedding = all_miss_embedding.reshape(
+-                -1, all_miss_embedding.shape[-1]
+-            )
+-            split_embeddings = torch.split(all_miss_embedding, token_counts, dim=0)
+-        for cache_key, emb in zip(ordered_cache_keys, split_embeddings):
+-            if embedding_cache.set(cache_key[0], EmbeddingResult(embedding=emb)):
+-                cached = embedding_cache.get_single(cache_key[0])
+-                if _embedding_token_count(cached.embedding) == cache_key[1]:
+-                    emb = cached.embedding
+-            # Keep a local ref (no extra GPU memory) so assembly never fails due to LRU eviction.
+-            hash_to_embedding[cache_key] = emb
++        with coordinator.encoding() if coordinator is not None else nullcontext():
++            ordered_cache_keys = list(unique_misses.keys())
++            miss_items = [unique_misses[key][0] for key in ordered_cache_keys]
++            token_counts = [unique_misses[key][1] for key in ordered_cache_keys]
++
++            _move_items_to_device(miss_items, device, data_embedding_func)
++            all_miss_embedding = data_embedding_func(miss_items)
++
++            if isinstance(all_miss_embedding, list):
++                # Per-item embeddings: no split needed, and each cache entry owns
++                # its storage (a torch.split view would pin the whole concatenated
++                # buffer for as long as any single item stays cached). Mirrors
++                # _get_chunked_embedding_by_item.
++                assert len(all_miss_embedding) == len(miss_items), (
++                    f"per-item embedding count {len(all_miss_embedding)} != "
++                    f"cache-miss item count {len(miss_items)}"
++                )
++                split_embeddings = [
++                    emb.reshape(-1, emb.shape[-1]) for emb in all_miss_embedding
++                ]
++            else:
++                all_miss_embedding = all_miss_embedding.reshape(
++                    -1, all_miss_embedding.shape[-1]
++                )
++                split_embeddings = torch.split(all_miss_embedding, token_counts, dim=0)
++            for cache_key, emb in zip(ordered_cache_keys, split_embeddings):
++                if embedding_cache.set(cache_key[0], EmbeddingResult(embedding=emb)):
++                    cached = embedding_cache.get_single(cache_key[0])
++                    if _embedding_token_count(cached.embedding) == cache_key[1]:
++                        emb = cached.embedding
++                # Keep a local ref (no extra GPU memory) so assembly never fails due to LRU eviction.
++                hash_to_embedding[cache_key] = emb
+ 
+     return hash_to_embedding
+ 
+@@ -532,36 +562,52 @@
+         else:
+             miss_items.append((idx, item, expected_token_count))
+ 
++    coordinator = image_dp_coordinator(data_embedding_func)
++    if coordinator is not None:
++        keys = tuple(
++            (item.cache_key, count, index) for index, item, count in overlapping
++        )
++        missing = coordinator.reconcile(
++            keys, [index not in cached_embeddings for index, _, _ in overlapping]
++        )
++        miss_items = [entry for entry, miss in zip(overlapping, missing) if miss]
++        for index, item, _ in miss_items:
++            if cached_embeddings.pop(index, None) is not None:
++                embedding_cache.free(item.cache_key, None)
++
+     if miss_items:
+-        miss_item_list = [item for _, item, _ in miss_items]
+-        _move_items_to_device(miss_item_list, device, data_embedding_func)
+-        all_miss_embedding = data_embedding_func(miss_item_list)
+-
+-        if isinstance(all_miss_embedding, list):
+-            # Per-item embeddings: no split needed, and each cache entry owns
+-            # its storage (a torch.split view would pin the whole concatenated
+-            # buffer for as long as any single item stays cached).
+-            assert len(all_miss_embedding) == len(miss_items), (
+-                f"per-item embedding count {len(all_miss_embedding)} != "
+-                f"cache-miss item count {len(miss_items)}"
+-            )
+-            split_embeddings = [
+-                emb.reshape(-1, emb.shape[-1]) for emb in all_miss_embedding
+-            ]
+-        else:
+-            all_miss_embedding = all_miss_embedding.reshape(
+-                -1, all_miss_embedding.shape[-1]
+-            )
+-            # Split output by per-item token count
+-            token_counts = [n for _, _, n in miss_items]
+-            split_embeddings = torch.split(all_miss_embedding, token_counts, dim=0)
+-
+-        for (idx, item, expected_token_count), emb in zip(miss_items, split_embeddings):
+-            if embedding_cache.set(item.cache_key, EmbeddingResult(embedding=emb)):
+-                cached = embedding_cache.get_single(item.cache_key)
+-                if _embedding_token_count(cached.embedding) == expected_token_count:
+-                    emb = cached.embedding
+-            cached_embeddings[idx] = emb
++        with coordinator.encoding() if coordinator is not None else nullcontext():
++            miss_item_list = [item for _, item, _ in miss_items]
++            _move_items_to_device(miss_item_list, device, data_embedding_func)
++            all_miss_embedding = data_embedding_func(miss_item_list)
++
++            if isinstance(all_miss_embedding, list):
++                # Per-item embeddings: no split needed, and each cache entry owns
++                # its storage (a torch.split view would pin the whole concatenated
++                # buffer for as long as any single item stays cached).
++                assert len(all_miss_embedding) == len(miss_items), (
++                    f"per-item embedding count {len(all_miss_embedding)} != "
++                    f"cache-miss item count {len(miss_items)}"
++                )
++                split_embeddings = [
++                    emb.reshape(-1, emb.shape[-1]) for emb in all_miss_embedding
++                ]
++            else:
++                all_miss_embedding = all_miss_embedding.reshape(
++                    -1, all_miss_embedding.shape[-1]
++                )
++                # Split output by per-item token count
++                token_counts = [n for _, _, n in miss_items]
++                split_embeddings = torch.split(all_miss_embedding, token_counts, dim=0)
++
++            for (idx, item, expected_token_count), emb in zip(
++                miss_items, split_embeddings
++            ):
++                if embedding_cache.set(item.cache_key, EmbeddingResult(embedding=emb)):
++                    cached = embedding_cache.get_single(item.cache_key)
++                    if _embedding_token_count(cached.embedding) == expected_token_count:
++                        emb = cached.embedding
++                cached_embeddings[idx] = emb
+ 
+     return [
+         _slice_item_chunk(cached_embeddings[idx], item, chunk_start, extend_seq_len)
+@@ -665,7 +711,7 @@
+ 
+     # Phase 1: batch encode all per-image cache misses in ONE ViT call
+     hash_to_embedding: Dict[Tuple[bytes, int], torch.Tensor] = {}
+-    if per_image_requests:
++    if per_image_requests or image_dp_group(data_embedding_func) is not None:
+         hash_to_embedding = _batch_encode_per_image_misses(
+             data_embedding_func, per_image_requests, device
+         )
+diff --git a/python/sglang/srt/models/kimi_k3.py b/python/sglang/srt/models/kimi_k3.py
+--- a/python/sglang/srt/models/kimi_k3.py
++++ b/python/sglang/srt/models/kimi_k3.py
+@@ -4033,6 +4033,16 @@
+             use_gpu_preprocessing=use_gpu_preprocessing,
+         )
+ 
++    def get_image_dp_group(self):
++        parallel = get_parallel()
++        if (
++            self.use_data_parallel
++            and parallel.attn_cp_size > 1
++            and parallel.attn_dp_size == 1
++        ):
++            return parallel.tp_group
++        return None
++
+     def get_image_feature(self, items: List[MultimodalDataItem]) -> torch.Tensor:
+         device = self.vision_tower.device
+         target_dtype = self.vision_tower.patch_embed.proj.weight.dtype
+@@ -4183,6 +4193,7 @@
+         if self.use_data_parallel:
+             from sglang.srt.multimodal.mm_utils import run_dp_sharded_mrope_vision_model
+ 
++            vision_dp_group = self.get_image_dp_group()
+             image_embeds = run_dp_sharded_mrope_vision_model(
+                 self.vision_tower,
+                 None,
+@@ -4196,6 +4207,7 @@
+                 load_local_pixel_values=materialize_item_features,
+                 pixel_values_device=device,
+                 pixel_values_dtype=target_dtype,
++                parallel_group=vision_dp_group,
+             )
+             return self.mm_projector(image_embeds)
+ 
+diff --git a/python/sglang/srt/multimodal/image_dp_consensus.py b/python/sglang/srt/multimodal/image_dp_consensus.py
+new file mode 100644
+--- /dev/null
++++ b/python/sglang/srt/multimodal/image_dp_consensus.py
+@@ -0,0 +1,108 @@
++"""CPU metadata coordination for an opt-in replicated image-DP encoder."""
++
++import hashlib
++import logging
++import pickle
++from contextlib import contextmanager, nullcontext
++from contextvars import ContextVar
++
++import torch
++import torch.distributed as dist
++
++_active = ContextVar("image_dp_coordinator", default=None)
++_MASK63 = (1 << 63) - 1
++
++
++class ImageDPCoordinationError(RuntimeError):
++    """All image-DP peers stop before publishing a failed encoding result."""
++
++
++def image_dp_group(encode):
++    owner = getattr(encode, "__self__", None)
++    hook = getattr(owner, "get_image_dp_group", None)
++    if hook is None or getattr(encode, "__name__", None) != "get_image_feature":
++        return None
++    return hook()
++
++
++def image_dp_coordinator(encode):
++    group = image_dp_group(encode)
++    return ImageDPCoordinator(group) if group is not None else None
++
++
++def _digest(value):
++    raw = hashlib.blake2b(pickle.dumps(value, protocol=5), digest_size=16).digest()
++    return [int.from_bytes(raw[i : i + 8], "little") & _MASK63 for i in (0, 8)]
++
++
++class ImageDPCoordinator:
++    def __init__(self, group):
++        self.group = group
++        self.sequence = 0
++
++    def _bounds(self, values):
++        # One fixed-size CPU gather; only inconsistent records need a min/max walk.
++        record = torch.tensor(values, dtype=torch.int64)
++        records = [torch.empty_like(record) for _ in range(self.group.world_size)]
++        dist.all_gather(records, record, group=self.group.cpu_group)
++        rows = [row.tolist() for row in records]
++        first = rows[0]
++        if all(row == first for row in rows[1:]):
++            return first, first
++        columns = list(zip(*rows))
++        return [min(column) for column in columns], [max(column) for column in columns]
++
++    def reconcile(self, keys, missing):
++        low, high = self._bounds([len(keys), *_digest(keys), *_digest(bytes(missing))])
++        if low[:3] != high[:3]:
++            raise ImageDPCoordinationError("image-DP image identities/order differ")
++        if low[3:] == high[3:]:
++            return missing
++        # Rare cache drift: retain canonical input order and encode the union of misses.
++        mask = torch.tensor(missing, dtype=torch.uint8)
++        dist.all_reduce(mask, op=dist.ReduceOp.MAX, group=self.group.cpu_group)
++        if self.group.rank_in_group == 0:
++            logging.getLogger(__name__).warning(
++                "image-DP cache disagreement: recomputing union of %d image misses",
++                int(mask.sum()),
++            )
++        return mask.tolist()
++
++    @contextmanager
++    def local_stage(self, phase, signature=lambda: ()):
++        error = None
++        fingerprint = [0, 0]
++        try:
++            yield
++            fingerprint = _digest(signature())
++        except ImageDPCoordinationError:
++            # A nested stage already synchronized failure; do not enter another collective.
++            raise
++        except Exception as exc:
++            error = exc
++        low, high = self._bounds(
++            [self.sequence * 4 + phase, *fingerprint, int(error is None)]
++        )
++        self.sequence += 1
++        if low[3] == 0:
++            raise ImageDPCoordinationError(
++                "image-DP encoding failed on a peer"
++            ) from error
++        if low[:3] != high[:3]:
++            raise ImageDPCoordinationError("image-DP encoding phases/layouts differ")
++
++    @contextmanager
++    def encoding(self):
++        token = _active.set(self)
++        try:
++            with self.local_stage(2):
++                yield
++        finally:
++            _active.reset(token)
++
++
++def image_dp_local_stage(group, signature):
++    coordinator = _active.get()
++    if coordinator is None or coordinator.group is not group:
++        return nullcontext()
++    return coordinator.local_stage(1, signature)
+diff --git a/python/sglang/srt/multimodal/mm_utils.py b/python/sglang/srt/multimodal/mm_utils.py
+--- a/python/sglang/srt/multimodal/mm_utils.py
++++ b/python/sglang/srt/multimodal/mm_utils.py
+@@ -41,6 +41,7 @@
+ from PIL import Image
+ 
+ from sglang.srt.distributed.communication_op import tensor_model_parallel_all_gather
++from sglang.srt.multimodal.image_dp_consensus import image_dp_local_stage
+ from sglang.srt.runtime_context import get_parallel
+ from sglang.srt.utils import flatten_nested_list
+ 
+@@ -570,6 +571,7 @@
+     pixel_values_device: Optional[torch.device] = None,
+     pixel_values_dtype: Optional[torch.dtype] = None,
+     pass_grid_thw_list: bool = False,
++    parallel_group=None,
+ ):
+     """Run a vision model with data parallelism (DP) sharding.
+     The function will shard the input image tensor on the
+@@ -591,6 +593,7 @@
+                    the spatial merge area instead of t * h * w divided by it.
+         pass_grid_thw_list: Forward the existing host grid list to the vision
+             model so graph-aware towers do not materialize it from a CUDA tensor.
++        parallel_group: Image-DP group; defaults to the attention-TP group.
+     Returns:
+         torch.Tensor: Output image embeddings
+ 
+@@ -617,7 +620,11 @@
+             "pixel_values_device and pixel_values_dtype are required with a local loader"
+         )
+ 
+-    tp_size = get_parallel().attn_tp_size
++    tp_size = (
++        get_parallel().attn_tp_size
++        if parallel_group is None
++        else parallel_group.world_size
++    )
+     if tp_size == 1:
+         if pixel_values is None:
+             pixel_values = load_local_pixel_values(list(range(len(grid_thw_list))))
+@@ -649,156 +656,177 @@
+             return image_embeds
+         return vision_model(pixel_values, grid_thw=grid_thw)
+ 
+-    # GPU_0 tp_rank_local = 0
+-    # GPU_1 tp_rank_local = 1
+-    tp_rank_local = get_parallel().attn_tp_rank
+-
+-    # patches_per_image = [1000, 100, 200, 50]
+-    patches_per_image = [math.prod(grid_thw) for grid_thw in grid_thw_list]
+-    # print(f"{patches_per_image = }")
+-    # patches_per_image = [0, 1000, 1100, 1300, 1350]
+-    cum_patches_per_image = [0, *itertools.accumulate(patches_per_image)]
+-
+-    # Get load balancing assignment with all metadata
+-    # image_to_tp_rank = [0, 2, 1, 3]
+-    # gpu_sample_counts = [1, 3]
+-    # grouped_pixel_values_len = [1000, 350]
+-    image_to_tp_rank, gpu_sample_counts, _ = get_dp_encoder_lb_assignment(
+-        patches_per_image, tp_size
+-    )
+-
+-    # cu_gpu_sample_counts = [0, 1, 4]
+-    cum_gpu_sample_counts = [0, *itertools.accumulate(gpu_sample_counts)]
+-
+-    # GPU_0 image_idxs_local = [0]
+-    # GPU_1 image_idxs_local = [2, 1, 3]
+-    image_idxs_local = image_to_tp_rank[
+-        cum_gpu_sample_counts[tp_rank_local] : cum_gpu_sample_counts[tp_rank_local + 1]
+-    ]
+-
+-    # Get the pixel values for the local images based on the image_idxs_local
+-    if len(image_idxs_local) > 0:
+-        if load_local_pixel_values is not None:
+-            pixel_values_local = load_local_pixel_values(image_idxs_local)
++    with image_dp_local_stage(
++        parallel_group,
++        lambda: (grid_thw_list, tuple(payload.shape), str(payload.dtype)),
++    ):
++        # GPU_0 tp_rank_local = 0
++        # GPU_1 tp_rank_local = 1
++        tp_rank_local = (
++            get_parallel().attn_tp_rank
++            if parallel_group is None
++            else parallel_group.rank_in_group
++        )
++        if parallel_group is None:
++            parallel_group = get_parallel().attn_tp_group
++
++        # patches_per_image = [1000, 100, 200, 50]
++        patches_per_image = [math.prod(grid_thw) for grid_thw in grid_thw_list]
++        # print(f"{patches_per_image = }")
++        # patches_per_image = [0, 1000, 1100, 1300, 1350]
++        cum_patches_per_image = [0, *itertools.accumulate(patches_per_image)]
++
++        # Get load balancing assignment with all metadata
++        # image_to_tp_rank = [0, 2, 1, 3]
++        # gpu_sample_counts = [1, 3]
++        # grouped_pixel_values_len = [1000, 350]
++        image_to_tp_rank, gpu_sample_counts, _ = get_dp_encoder_lb_assignment(
++            patches_per_image, tp_size
++        )
++
++        # cu_gpu_sample_counts = [0, 1, 4]
++        cum_gpu_sample_counts = [0, *itertools.accumulate(gpu_sample_counts)]
++
++        # GPU_0 image_idxs_local = [0]
++        # GPU_1 image_idxs_local = [2, 1, 3]
++        image_idxs_local = image_to_tp_rank[
++            cum_gpu_sample_counts[tp_rank_local] : cum_gpu_sample_counts[
++                tp_rank_local + 1
++            ]
++        ]
++
++        # Get the pixel values for the local images based on the image_idxs_local
++        if len(image_idxs_local) > 0:
++            if load_local_pixel_values is not None:
++                pixel_values_local = load_local_pixel_values(image_idxs_local)
++            else:
++                assert pixel_values is not None
++                pixel_values_local = torch.cat(
++                    [
++                        pixel_values[
++                            cum_patches_per_image[i] : cum_patches_per_image[i + 1]
++                        ]
++                        for i in image_idxs_local
++                    ]
++                )
+         else:
+-            assert pixel_values is not None
+-            pixel_values_local = torch.cat(
+-                [
+-                    pixel_values[
+-                        cum_patches_per_image[i] : cum_patches_per_image[i + 1]
+-                    ]
+-                    for i in image_idxs_local
+-                ]
++            pixel_values_local = None
++        # embed_dim_reduction_factor = 2 * 2
++        packed_2d_rope = rope_type in ("rope_2d", "rope_2d_packed")
++        if packed_2d_rope:
++            embed_dim_reduction_factor = (
++                vision_model.merge_kernel_size[0] * vision_model.merge_kernel_size[1]
+             )
+-    else:
+-        pixel_values_local = None
+-    # embed_dim_reduction_factor = 2 * 2
+-    packed_2d_rope = rope_type in ("rope_2d", "rope_2d_packed")
+-    if packed_2d_rope:
+-        embed_dim_reduction_factor = (
+-            vision_model.merge_kernel_size[0] * vision_model.merge_kernel_size[1]
+-        )
+-    else:
+-        embed_dim_reduction_factor = (
+-            vision_model.spatial_merge_size * vision_model.spatial_merge_size
+-        )
+-
+-    output_tokens_per_image = [
+-        math.prod(grid[1:] if pool_temporal_dimension else grid)
+-        // embed_dim_reduction_factor
+-        for grid in grid_thw_list
+-    ]
+-    grouped_output_lengths = []
+-    assignment_offset = 0
+-    for sample_count in gpu_sample_counts:
+-        rank_images = image_to_tp_rank[
+-            assignment_offset : assignment_offset + sample_count
++        else:
++            embed_dim_reduction_factor = (
++                vision_model.spatial_merge_size * vision_model.spatial_merge_size
++            )
++
++        output_tokens_per_image = [
++            math.prod(grid[1:] if pool_temporal_dimension else grid)
++            // embed_dim_reduction_factor
++            for grid in grid_thw_list
+         ]
+-        grouped_output_lengths.append(
+-            sum(output_tokens_per_image[i] for i in rank_images)
+-        )
+-        assignment_offset += sample_count
+-
+-    # Find the max length across all ranks
+-    # The output embedding of every DP rank has to be
+-    # padded to this length for tensor_model_parallel_all_gather
+-    # to work
+-    max_len_per_rank = max(grouped_output_lengths)
+-    local_grid_thw_list = [grid_thw_list[i] for i in image_idxs_local]
+-
+-    # Run the vision model on the local pixel_values_local
+-    if packed_2d_rope:
+-        if pixel_values_local is not None and pixel_values_local.shape[0] > 0:
+-            # Packed MoonViT reads grid_thw as CPU shape metadata. Placing it
+-            # on CUDA would make each .tolist() call synchronize with the host.
+-            local_grid_thw = torch.tensor(
+-                local_grid_thw_list,
+-                device=(pixel_values_local.device if rope_type == "rope_2d" else None),
++        grouped_output_lengths = []
++        assignment_offset = 0
++        for sample_count in gpu_sample_counts:
++            rank_images = image_to_tp_rank[
++                assignment_offset : assignment_offset + sample_count
++            ]
++            grouped_output_lengths.append(
++                sum(output_tokens_per_image[i] for i in rank_images)
+             )
+-            if rope_type == "rope_2d":
+-                kwargs = {
+-                    "grid_hw": local_grid_thw,
+-                    "max_seqlen": max(math.prod(grid) for grid in local_grid_thw_list),
+-                }
+-                if pass_grid_thw_list:
+-                    kwargs["grid_thw_list"] = local_grid_thw_list
+-                image_embeds_local = vision_model(pixel_values_local, **kwargs)
++            assignment_offset += sample_count
++
++        # Find the max length across all ranks
++        # The output embedding of every DP rank has to be
++        # padded to this length for tensor_model_parallel_all_gather
++        # to work
++        max_len_per_rank = max(grouped_output_lengths)
++        local_grid_thw_list = [grid_thw_list[i] for i in image_idxs_local]
++
++        # Run the vision model on the local pixel_values_local
++        if packed_2d_rope:
++            if pixel_values_local is not None and pixel_values_local.shape[0] > 0:
++                # Packed MoonViT reads grid_thw as CPU shape metadata. Placing it
++                # on CUDA would make each .tolist() call synchronize with the host.
++                local_grid_thw = torch.tensor(
++                    local_grid_thw_list,
++                    device=(
++                        pixel_values_local.device if rope_type == "rope_2d" else None
++                    ),
++                )
++                if rope_type == "rope_2d":
++                    kwargs = {
++                        "grid_hw": local_grid_thw,
++                        "max_seqlen": max(
++                            math.prod(grid) for grid in local_grid_thw_list
++                        ),
++                    }
++                    if pass_grid_thw_list:
++                        kwargs["grid_thw_list"] = local_grid_thw_list
++                    image_embeds_local = vision_model(pixel_values_local, **kwargs)
++                else:
++                    image_embeds_local = vision_model(
++                        pixel_values_local, local_grid_thw
++                    )
++                if isinstance(image_embeds_local, list):
++                    image_embeds_local = concat_or_single(image_embeds_local, dim=0)
+             else:
+-                image_embeds_local = vision_model(pixel_values_local, local_grid_thw)
+-            if isinstance(image_embeds_local, list):
+-                image_embeds_local = concat_or_single(image_embeds_local, dim=0)
++                out_dim = getattr(vision_model.config, "hidden_size", None)
++                image_embeds_local = torch.empty(
++                    (0, embed_dim_reduction_factor, out_dim),
++                    device=vision_model.device,
++                    dtype=input_dtype,
++                )
+         else:
+-            out_dim = getattr(vision_model.config, "hidden_size", None)
+-            image_embeds_local = torch.empty(
+-                (0, embed_dim_reduction_factor, out_dim),
+-                device=vision_model.device,
+-                dtype=input_dtype,
++            if pixel_values_local is not None and pixel_values_local.shape[0] > 0:
++                # print(f"{local_grid_thw_list = }", flush=True)
++                image_embeds_local = vision_model(
++                    pixel_values_local, torch.tensor(local_grid_thw_list)
++                )
++                if isinstance(image_embeds_local, list):
++                    image_embeds_local = concat_or_single(image_embeds_local, dim=0)
++            else:
++                # Handle empty case
++                out_dim = getattr(vision_model, "out_hidden_size", None)
++                if out_dim is None:
++                    out_dim = vision_model.config.hidden_size
++                image_embeds_local = torch.empty(
++                    (0, out_dim),
++                    device=vision_model.device,
++                    dtype=input_dtype,
++                )
++
++        # Single-image fast path. Bit-identical to the all-gather below, which for
++        # one image just pads the owner's rows and slices them back out.
++        if len(grid_thw_list) == 1:
++            owner_local = image_to_tp_rank[0]
++            n_tok = output_tokens_per_image[0]
++            if tp_rank_local == owner_local:
++                out_embeddings = image_embeds_local.contiguous()
++            else:
++                out_embeddings = torch.empty(
++                    (n_tok, *image_embeds_local.shape[1:]),
++                    dtype=input_dtype,
++                    device=input_device,
++                )
++        else:
++            # The TP all-gather needs a common first dimension. Allocate that final
++            # shape directly instead of materializing a padding fragment and catting it.
++            image_embeds_local_padded = _pad_mrope_vision_embeddings_for_tp_gather(
++                image_embeds_local, max_len_per_rank
+             )
+-    else:
+-        if pixel_values_local is not None and pixel_values_local.shape[0] > 0:
+-            # print(f"{local_grid_thw_list = }", flush=True)
+-            image_embeds_local = vision_model(
+-                pixel_values_local, torch.tensor(local_grid_thw_list)
+-            )
+-            if isinstance(image_embeds_local, list):
+-                image_embeds_local = concat_or_single(image_embeds_local, dim=0)
+-        else:
+-            # Handle empty case
+-            out_dim = getattr(vision_model, "out_hidden_size", None)
+-            if out_dim is None:
+-                out_dim = vision_model.config.hidden_size
+-            image_embeds_local = torch.empty(
+-                (0, out_dim),
+-                device=vision_model.device,
+-                dtype=input_dtype,
+-            )
+-
+-    # Single-image fast path. Bit-identical to the all-gather below, which for
+-    # one image just pads the owner's rows and slices them back out.
++        payload = (
++            out_embeddings if len(grid_thw_list) == 1 else image_embeds_local_padded
++        )
++
+     if len(grid_thw_list) == 1:
+-        owner_local = image_to_tp_rank[0]
+-        n_tok = output_tokens_per_image[0]
+-        if tp_rank_local == owner_local:
+-            out_embeddings = image_embeds_local.contiguous()
+-        else:
+-            out_embeddings = torch.empty(
+-                (n_tok, *image_embeds_local.shape[1:]),
+-                dtype=input_dtype,
+-                device=input_device,
+-            )
+-        get_parallel().attn_tp_group.broadcast(out_embeddings, src=owner_local)
++        parallel_group.broadcast(out_embeddings, src=owner_local)
+         return out_embeddings
+ 
+-    # The TP all-gather needs a common first dimension. Allocate that final
+-    # shape directly instead of materializing a padding fragment and catting it.
+-    image_embeds_local_padded = _pad_mrope_vision_embeddings_for_tp_gather(
+-        image_embeds_local, max_len_per_rank
+-    )
+-
+     # Do all_gather to collect embeddings from all ranks
+-    gathered_embeds = get_parallel().attn_tp_group.all_gather(
+-        image_embeds_local_padded, dim=0
+-    )
++    gathered_embeds = parallel_group.all_gather(image_embeds_local_padded, dim=0)
+ 
+     # Remove padding and reconstruct per-rank embeddings
+     rank_embeddings = list[torch.Tensor]()
+diff --git a/test/registered/unit/multimodal/test_kimi_k3_image_dp_consensus.py b/test/registered/unit/multimodal/test_kimi_k3_image_dp_consensus.py
+new file mode 100644
+--- /dev/null
++++ b/test/registered/unit/multimodal/test_kimi_k3_image_dp_consensus.py
+@@ -0,0 +1,270 @@
++"""Two real Gloo ranks: cache drift heals and local failures stop before payloads."""
++
++import datetime
++import json
++import socket
++import tempfile
++import unittest
++from pathlib import Path
++from types import SimpleNamespace
++
++import torch
++import torch.distributed as dist
++import torch.multiprocessing as mp
++
++from sglang.srt.managers import mm_schedule
++from sglang.srt.mem_cache.multimodal_cache import EmbeddingResult, MultiModalStaticCache
++from sglang.srt.multimodal.image_dp_consensus import ImageDPCoordinationError
++from sglang.srt.multimodal.mm_utils import run_dp_sharded_mrope_vision_model
++from sglang.srt.multimodal.modality import Modality
++from sglang.srt.runtime_context import get_parallel
++from sglang.test.ci.ci_register import register_cpu_ci
++from sglang.test.test_utils import CustomTestCase
++
++register_cpu_ci(est_time=20, suite="base-a-test-cpu")
++
++CASES = [
++    "cold",
++    "hot",
++    "partial",
++    "drift",
++    "stale_union",
++    "one_hit",
++    "empty",
++    "identity",
++    "missing_input",
++    "memory",
++    "early",
++    "projector",
++    "grid",
++    "padding",
++    "split",
++    "split_memory",
++    "by_item",
++    "full",
++]
++FAILURES = {
++    "identity",
++    "missing_input",
++    "memory",
++    "early",
++    "projector",
++    "grid",
++    "padding",
++    "split_memory",
++}
++
++
++def _key(item):
++    return getattr(item, "cache_key", item.hash)
++
++
++def _worker(rank, port, output):
++    import sglang.srt.multimodal.mm_utils as helpers
++
++    torch.set_num_threads(1)
++    dist.init_process_group(
++        "gloo",
++        init_method=f"tcp://127.0.0.1:{port}",
++        rank=rank,
++        world_size=2,
++        timeout=datetime.timedelta(seconds=10),
++    )
++
++    class Group:
++        world_size = 2
++        rank_in_group = rank
++        cpu_group = dist.group.WORLD
++
++        def __init__(self):
++            self.payloads = 0
++
++        def broadcast(self, tensor, src):
++            self.payloads += 1
++            dist.broadcast(tensor, src)
++
++        def all_gather(self, tensor, dim):
++            self.payloads += 1
++            values = [torch.empty_like(tensor) for _ in range(2)]
++            dist.all_gather(values, tensor)
++            return torch.cat(values, dim)
++
++    class Tower:
++        device = torch.device("cpu")
++        merge_kernel_size = (1, 1)
++        config = SimpleNamespace(hidden_size=1)
++        patch_embed = SimpleNamespace(proj=SimpleNamespace(weight=torch.empty(1)))
++
++        def __call__(self, pixels, **_kwargs):
++            if rank == 0 and (
++                owner.mode == "memory"
++                or owner.mode == "split_memory"
++                and pixels[0, 0] == 2
++            ):
++                raise MemoryError("injected owner failure")
++            return pixels.reshape(-1, 1, 1)
++
++    class Owner:
++        mode = "cold"
++
++        def get_image_dp_group(self):
++            return group
++
++        def get_image_feature(self, misses):
++            if self.mode == "early" and rank == 0:
++                raise ValueError("injected preprocessing failure")
++
++            def run(items):
++                grids = [
++                    [1, 2, 2] if self.mode == "grid" and rank == 1 else [1, 1, 4]
++                ] * len(items)
++                return run_dp_sharded_mrope_vision_model(
++                    Tower(),
++                    torch.cat([item.feature for item in items]),
++                    grids,
++                    rope_type="rope_2d",
++                    parallel_group=group,
++                )
++
++            result = (
++                torch.cat([run([item]) for item in misses])
++                if self.mode in ("split", "split_memory")
++                else run(misses)
++            )
++            if self.mode == "projector" and rank == 0:
++                raise MemoryError("injected projector failure")
++            return result
++
++    group, owner = Group(), Owner()
++    rows = []
++    original_pad = helpers._pad_mrope_vision_embeddings_for_tp_gather
++    try:
++        with get_parallel().override(attn_tp_size=1, attn_tp_rank=0):
++            for case in CASES:
++                dist.barrier()
++                owner.mode = case
++                group.payloads = 0
++                cache = MultiModalStaticCache(4096)
++                mm_schedule.embedding_cache = cache
++                items = [
++                    mm_schedule.MultimodalDataItem(
++                        modality=Modality.IMAGE,
++                        hash=i + 1,
++                        offsets=[(4 * i, 4 * i + 3)],
++                        feature=torch.full((4, 1), float(i + 1)),
++                    )
++                    for i in range(2)
++                ]
++                seed = items if case == "hot" or case == "one_hit" and rank == 0 else []
++                if case in ("drift", "by_item"):
++                    seed = [items[rank]]
++                elif case == "partial":
++                    seed = [items[0]]
++                if case == "stale_union" and rank == 0:
++                    cache.set(
++                        _key(items[0]),
++                        EmbeddingResult(embedding=items[1].feature.clone()),
++                    )
++                for item in seed:
++                    cache.set(
++                        _key(item), EmbeddingResult(embedding=item.feature.clone())
++                    )
++                if case == "full" and rank == 0:
++                    cache.set(
++                        MultiModalStaticCache.combine_hashes([_key(i) for i in items]),
++                        EmbeddingResult(
++                            embedding=torch.cat([i.feature for i in items])
++                        ),
++                    )
++                selected = (
++                    list(reversed(items)) if case == "identity" and rank == 1 else items
++                )
++                if case == "missing_input" and rank == 1 or case == "empty":
++                    selected = []
++                request = mm_schedule.PerImageRequestInfo(
++                    0, selected, [(0, 3), (4, 7)], 0, 8
++                )
++                if case == "padding" and rank == 0:
++
++                    def fail_pad(*_args):
++                        raise MemoryError("injected gather allocation failure")
++
++                    helpers._pad_mrope_vision_embeddings_for_tp_gather = fail_pad
++                error = None
++                try:
++                    if case == "by_item":
++                        result = mm_schedule._get_chunked_embedding_by_item(
++                            owner.get_image_feature, items, 0, 8, torch.device("cpu")
++                        )
++                        assert torch.equal(
++                            torch.cat(result), torch.cat([i.feature for i in items])
++                        )
++                    elif case == "full":
++                        result, _ = mm_schedule._get_chunked_embedding_full(
++                            owner.get_image_feature,
++                            items,
++                            [(0, 3), (4, 7)],
++                            0,
++                            8,
++                            torch.arange(8),
++                            torch.device("cpu"),
++                        )
++                        assert torch.equal(
++                            result, torch.cat([i.feature for i in items])
++                        )
++                    else:
++                        result = mm_schedule._batch_encode_per_image_misses(
++                            owner.get_image_feature, [request], torch.device("cpu")
++                        )
++                        for item in selected:
++                            assert torch.equal(result[(_key(item), 4)], item.feature)
++                except ImageDPCoordinationError as exc:
++                    error = str(exc)
++                finally:
++                    helpers._pad_mrope_vision_embeddings_for_tp_gather = original_pad
++                assert bool(error) == (case in FAILURES), (case, rank, error)
++                if case in FAILURES - {"projector", "split_memory"}:
++                    assert group.payloads == 0, (case, group.payloads)
++                if case == "hot":
++                    assert group.payloads == 0
++                if error:
++                    # The metadata communicator must remain usable after a coordinated stop.
++                    owner.mode = "cold"
++                    request = mm_schedule.PerImageRequestInfo(
++                        0, items, [(0, 3), (4, 7)], 0, 8
++                    )
++                    recovered = mm_schedule._batch_encode_per_image_misses(
++                        owner.get_image_feature, [request], torch.device("cpu")
++                    )
++                    for item in items:
++                        assert torch.equal(recovered[(_key(item), 4)], item.feature)
++                rows.append(
++                    dict(case=case, coordinated_error=error, next_request_ok=True)
++                )
++        (Path(output) / f"rank{rank}.json").write_text(json.dumps(rows, indent=2))
++    finally:
++        dist.destroy_process_group()
++
++
++class TestImageDPConsensus(CustomTestCase):
++    def test_real_gloo_cache_drift_and_failures(self):
++        with tempfile.TemporaryDirectory() as output:
++            with socket.socket() as sock:
++                sock.bind(("127.0.0.1", 0))
++                port = sock.getsockname()[1]
++            mp.spawn(_worker, args=(port, output), nprocs=2, join=True)
++            rows = [
++                json.loads((Path(output) / f"rank{r}.json").read_text()) for r in [0, 1]
++            ]
++            self.assertEqual([r["case"] for r in rows[0]], CASES)
++            print(
++                f"Validated {len(CASES)} scenarios on two real Gloo ranks", flush=True
++            )
++            self.assertEqual(
++                [bool(r["coordinated_error"]) for r in rows[0]],
++                [bool(r["coordinated_error"]) for r in rows[1]],
++            )
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/test/registered/unit/multimodal/test_kimi_k3_pcp_vision_dp.py b/test/registered/unit/multimodal/test_kimi_k3_pcp_vision_dp.py
+new file mode 100644
+--- /dev/null
++++ b/test/registered/unit/multimodal/test_kimi_k3_pcp_vision_dp.py
+@@ -0,0 +1,185 @@
++"""CPU coverage for image-DP across Kimi's prefill-CP peers."""
++
++from types import SimpleNamespace
++
++import pytest
++import torch
++
++from sglang.srt.managers import mm_schedule
++from sglang.srt.managers.req_types import MultimodalDataItem
++from sglang.srt.mem_cache.multimodal_cache import MultiModalStaticCache
++from sglang.srt.models import kimi_k3
++from sglang.srt.multimodal.mm_utils import run_dp_sharded_mrope_vision_model
++from sglang.srt.multimodal.modality import Modality
++from sglang.srt.runtime_context import get_parallel
++from sglang.test.ci.ci_register import register_cpu_ci
++
++register_cpu_ci(est_time=5, suite="base-a-test-cpu")
++
++
++class _Tower:
++    device = torch.device("cpu")
++    merge_kernel_size = (1, 1)
++    config = SimpleNamespace(hidden_size=1)
++    patch_embed = SimpleNamespace(proj=SimpleNamespace(weight=torch.empty(1)))
++
++    def __init__(self):
++        self.calls = 0
++
++    def __call__(self, pixels, **_kwargs):
++        self.calls += 1
++        return pixels.reshape(-1, 1, 1)
++
++
++class _ImageGroup:
++    world_size = 2
++
++    def __init__(self, rank, features, shards):
++        self.rank_in_group = rank
++        self.features = features
++        self.shards = shards
++        self.collectives = 0
++
++    def broadcast(self, tensor, src):
++        assert src == 0
++        tensor.copy_(self.features[0].reshape(-1, 1, 1))
++        self.collectives += 1
++
++    def all_gather(self, tensor, dim):
++        packed = []
++        for rank, indices in enumerate(self.shards):
++            expected = torch.cat([self.features[i] for i in indices]).reshape(-1, 1, 1)
++            if rank == self.rank_in_group:
++                torch.testing.assert_close(tensor[: len(expected)], expected)
++            padded = torch.zeros_like(tensor)
++            padded[: len(expected)] = expected
++            packed.append(padded)
++        self.collectives += 1
++        return torch.cat(packed, dim=dim)
++
++
++@pytest.mark.parametrize(
++    "sizes,shards", [([4], [[0], []]), ([4, 4], [[0], [1]]), ([4, 2, 1], [[0], [1, 2]])]
++)
++@pytest.mark.parametrize("rank", [0, 1])
++def test_pcp_image_group_encodes_each_image_once_and_restores_order(
++    rank, sizes, shards
++):
++    features = [torch.full((n, 1), float(i + 1)) for i, n in enumerate(sizes)]
++    group = _ImageGroup(rank, features, shards)
++    tower = _Tower()
++    loaded = []
++
++    def load(indices):
++        loaded.extend(indices)
++        return torch.cat([features[i] for i in indices])
++
++    # Each CP peer has singleton attention TP, but shares this image-DP group.
++    with get_parallel().override(attn_tp_size=1, attn_tp_rank=0):
++        output = run_dp_sharded_mrope_vision_model(
++            tower,
++            None,
++            [[1, 1, n] for n in sizes],
++            rope_type="rope_2d",
++            load_local_pixel_values=load,
++            pixel_values_device=torch.device("cpu"),
++            pixel_values_dtype=torch.float32,
++            parallel_group=group,
++        )
++
++    assert loaded == shards[rank]
++    assert tower.calls == bool(shards[rank])
++    assert group.collectives == 1
++    torch.testing.assert_close(output, torch.cat(features).reshape(-1, 1, 1))
++
++
++@pytest.mark.parametrize(
++    "cp,dp,use_tp_group", [(2, 1, True), (1, 1, False), (2, 2, False)]
++)
++def test_kimi_only_selects_full_tp_for_replicated_cp_images(
++    monkeypatch, cp, dp, use_tp_group
++):
++    group = object()
++    monkeypatch.setattr(
++        kimi_k3,
++        "get_parallel",
++        lambda: SimpleNamespace(attn_cp_size=cp, attn_dp_size=dp, tp_group=group),
++    )
++    model = kimi_k3.KimiK3ForConditionalGeneration.__new__(
++        kimi_k3.KimiK3ForConditionalGeneration
++    )
++    torch.nn.Module.__init__(model)
++    model.use_data_parallel = True
++    model.vision_tower = _Tower()
++    model.mm_projector = torch.nn.Identity()
++    expected = torch.ones(1, 1)
++
++    def run_dp(*_args, parallel_group, **_kwargs):
++        assert parallel_group is (group if use_tp_group else None)
++        return expected
++
++    monkeypatch.setattr(
++        "sglang.srt.multimodal.mm_utils.run_dp_sharded_mrope_vision_model", run_dp
++    )
++    item = SimpleNamespace(model_specific_data={"grid_thws": torch.tensor([[1, 1, 1]])})
++    assert model.get_image_feature([item]) is expected
++
++
++@pytest.mark.parametrize("rank", [0, 1])
++def test_replicated_cache_cold_hot_partial_and_empty_chunks(monkeypatch, rank):
++    cache = MultiModalStaticCache(1024)
++    monkeypatch.setattr(mm_schedule, "embedding_cache", cache)
++    items = [
++        MultimodalDataItem(
++            modality=Modality.IMAGE,
++            hash=i,
++            offsets=[(i * 4, i * 4 + 3)],
++            feature=torch.full((4, 1), float(i + 1)),
++        )
++        for i in range(2)
++    ]
++    request = mm_schedule.PerImageRequestInfo(0, items, [(0, 3), (4, 7)], 0, 8)
++    encoded = []
++
++    def encode(misses):
++        encoded.append([item.hash for item in misses])
++        features = [item.feature for item in misses]
++        shards = [[0], []] if len(misses) == 1 else [[0], [1]]
++        return run_dp_sharded_mrope_vision_model(
++            _Tower(),
++            torch.cat(features),
++            [[1, 1, 4]] * len(misses),
++            rope_type="rope_2d",
++            parallel_group=_ImageGroup(rank, features, shards),
++        )
++
++    with get_parallel().override(attn_tp_size=1, attn_tp_rank=0):
++        cold = mm_schedule._batch_encode_per_image_misses(
++            encode, [request], torch.device("cpu")
++        )
++        hot = mm_schedule._batch_encode_per_image_misses(
++            encode, [request], torch.device("cpu")
++        )
++        assert encoded == [[0, 1]]
++        assert cold.keys() == hot.keys()
++        for key in cold:
++            torch.testing.assert_close(cold[key], hot[key])
++        cache.free(items[0].cache_key, None)
++        partial = mm_schedule._batch_encode_per_image_misses(
++            encode, [request], torch.device("cpu")
++        )
++        assert encoded == [[0, 1], [0]]
++        for key in cold:
++            torch.testing.assert_close(cold[key], partial[key])
++        request.extend_seq_len = 0
++        assert (
++            mm_schedule._batch_encode_per_image_misses(
++                encode, [request], torch.device("cpu")
++            )
++            == {}
++        )
++        assert encoded == [[0, 1], [0]]
++
++
++if __name__ == "__main__":
++    raise SystemExit(pytest.main([__file__]))

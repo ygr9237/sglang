@@ -1,0 +1,32 @@
+[
+  {
+    "path": "python/sglang/srt/managers/mm_schedule.py",
+    "before_sha256": "dbb05cb3d4734c7116fd2aad218feee295cb42257e4695fdd874d10e283244fa",
+    "after_sha256": "a125852432300a04c2672017dcc2eeda833f640793c9451f69d6fb82b8319aff"
+  },
+  {
+    "path": "python/sglang/srt/models/kimi_k3.py",
+    "before_sha256": "2d9ec1edd790340016bb0fe9c5ed1f0bfd977f2a28f53498da1301afcb620ca9",
+    "after_sha256": "1c006da26f2f6560ae5261866ea3017b11853242a1ff424435fbec74b06c3ef7"
+  },
+  {
+    "path": "python/sglang/srt/multimodal/image_dp_consensus.py",
+    "before_sha256": null,
+    "after_sha256": "fd64f30ae112d5398337ec26235a8737de3536fc8b0e095b12f40702dec846ac"
+  },
+  {
+    "path": "python/sglang/srt/multimodal/mm_utils.py",
+    "before_sha256": "0ee6ce7c40939cd6d9894c940ff7fa55f7181109c4164111560fa60adab76076",
+    "after_sha256": "fb5c2513efc06f0ab65d5f7981d37535d4d32bc7650d6fd730786035ce71646a"
+  },
+  {
+    "path": "test/registered/unit/multimodal/test_kimi_k3_image_dp_consensus.py",
+    "before_sha256": null,
+    "after_sha256": "41e595d0e647a6791c8c7082c24a75671ccc1a97ca752bee2305b8bf32c77898"
+  },
+  {
+    "path": "test/registered/unit/multimodal/test_kimi_k3_pcp_vision_dp.py",
+    "before_sha256": null,
+    "after_sha256": "109462136bc94f4f0aa9aca8329a2818d293ba4754e844489d434ec6e8b3b146"
+  }
+]

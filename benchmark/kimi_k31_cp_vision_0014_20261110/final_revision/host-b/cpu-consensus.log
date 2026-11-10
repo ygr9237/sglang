@@ -1,0 +1,13 @@
+[CI Test Method] TestImageDPConsensus.test_real_gloo_cache_drift_and_failures
+image-DP cache disagreement: recomputing union of 2 image misses
+image-DP cache disagreement: recomputing union of 2 image misses
+image-DP cache disagreement: recomputing union of 2 image misses
+image-DP cache disagreement: recomputing union of 2 image misses
+image-DP cache disagreement: recomputing union of 2 image misses
+image-DP cache disagreement: recomputing union of 1 image misses
+Validated 18 scenarios on two real Gloo ranks
+.
+----------------------------------------------------------------------
+Ran 1 test in 8.018s
+
+OK

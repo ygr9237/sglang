@@ -1,0 +1,147 @@
+{
+  "comparison": "original pinned main vs complete 0014+0019 main revision",
+  "all_outputs_bit_identical": true,
+  "measurements": [
+    {
+      "host": "host-a",
+      "images": 1,
+      "cache": "cold",
+      "original_ms": 9.966816425323486,
+      "final_ms": 10.34674072265625,
+      "delta_ms": 0.37992429733276367,
+      "latency_change_percent": 3.8118921942563277,
+      "output_sha256": "f2cb2e6d82e0f73bf2e20c32777ca188d4b190d48b758788b0ef8bb63529a9cb"
+    },
+    {
+      "host": "host-a",
+      "images": 1,
+      "cache": "hot",
+      "original_ms": 0.0361644197255373,
+      "final_ms": 0.32025808095932007,
+      "delta_ms": 0.28409366123378277,
+      "latency_change_percent": 785.5612322549493,
+      "output_sha256": "f2cb2e6d82e0f73bf2e20c32777ca188d4b190d48b758788b0ef8bb63529a9cb"
+    },
+    {
+      "host": "host-a",
+      "images": 10,
+      "cache": "cold",
+      "original_ms": 92.47558975219727,
+      "final_ms": 47.99274444580078,
+      "delta_ms": -44.482845306396484,
+      "latency_change_percent": -48.10225641771542,
+      "output_sha256": "d14cd1ec31ba95311dae75e2195e53dbbbc4cb8c799ca1887248870f6975d6e2"
+    },
+    {
+      "host": "host-a",
+      "images": 10,
+      "cache": "hot",
+      "original_ms": 0.09990343824028969,
+      "final_ms": 0.38930727541446686,
+      "delta_ms": 0.28940383717417717,
+      "latency_change_percent": 289.6835607179979,
+      "output_sha256": "d14cd1ec31ba95311dae75e2195e53dbbbc4cb8c799ca1887248870f6975d6e2"
+    },
+    {
+      "host": "host-a",
+      "images": 20,
+      "cache": "cold",
+      "original_ms": 185.1215362548828,
+      "final_ms": 94.53008270263672,
+      "delta_ms": -90.5914535522461,
+      "latency_change_percent": -48.936204498387546,
+      "output_sha256": "06e5cc9f8f41557529ccb5d25e21cab9b20a920551856a3bc9c2b7268eda8ef0"
+    },
+    {
+      "host": "host-a",
+      "images": 20,
+      "cache": "hot",
+      "original_ms": 0.1749466136097908,
+      "final_ms": 0.4743689149618149,
+      "delta_ms": 0.2994223013520241,
+      "latency_change_percent": 171.15067000946343,
+      "output_sha256": "06e5cc9f8f41557529ccb5d25e21cab9b20a920551856a3bc9c2b7268eda8ef0"
+    },
+    {
+      "host": "host-b",
+      "images": 1,
+      "cache": "cold",
+      "original_ms": 9.947060585021973,
+      "final_ms": 10.255937576293945,
+      "delta_ms": 0.30887699127197266,
+      "latency_change_percent": 3.105208705947482,
+      "output_sha256": "f2cb2e6d82e0f73bf2e20c32777ca188d4b190d48b758788b0ef8bb63529a9cb"
+    },
+    {
+      "host": "host-b",
+      "images": 1,
+      "cache": "hot",
+      "original_ms": 0.03465102054178715,
+      "final_ms": 0.4100089520215988,
+      "delta_ms": 0.37535793147981167,
+      "latency_change_percent": 1083.2521686544599,
+      "output_sha256": "f2cb2e6d82e0f73bf2e20c32777ca188d4b190d48b758788b0ef8bb63529a9cb"
+    },
+    {
+      "host": "host-b",
+      "images": 10,
+      "cache": "cold",
+      "original_ms": 90.75851058959961,
+      "final_ms": 46.99074172973633,
+      "delta_ms": -43.76776885986328,
+      "latency_change_percent": -48.22442388656696,
+      "output_sha256": "d14cd1ec31ba95311dae75e2195e53dbbbc4cb8c799ca1887248870f6975d6e2"
+    },
+    {
+      "host": "host-b",
+      "images": 10,
+      "cache": "hot",
+      "original_ms": 0.09979657083749771,
+      "final_ms": 0.4646533578634262,
+      "delta_ms": 0.3648567870259285,
+      "latency_change_percent": 365.6005251122684,
+      "output_sha256": "d14cd1ec31ba95311dae75e2195e53dbbbc4cb8c799ca1887248870f6975d6e2"
+    },
+    {
+      "host": "host-b",
+      "images": 20,
+      "cache": "cold",
+      "original_ms": 181.24505615234375,
+      "final_ms": 92.56037521362305,
+      "delta_ms": -88.6846809387207,
+      "latency_change_percent": -48.93081379509611,
+      "output_sha256": "06e5cc9f8f41557529ccb5d25e21cab9b20a920551856a3bc9c2b7268eda8ef0"
+    },
+    {
+      "host": "host-b",
+      "images": 20,
+      "cache": "hot",
+      "original_ms": 0.17422018945217133,
+      "final_ms": 0.5209544003009796,
+      "delta_ms": 0.3467342108488083,
+      "latency_change_percent": 199.0206829295162,
+      "output_sha256": "06e5cc9f8f41557529ccb5d25e21cab9b20a920551856a3bc9c2b7268eda8ef0"
+    }
+  ],
+  "microbenchmark": true,
+  "http_or_full_service": false,
+  "warmups": 6,
+  "samples": 12,
+  "grid": [
+    1,
+    74,
+    74
+  ],
+  "dtype": "bf16",
+  "vit_cuda_graph": false,
+  "hosts": [
+    "host-a",
+    "host-b"
+  ],
+  "base": "704681229f1cdda291dbd2261dabb2ae80a4a49d",
+  "graph": "original singleton attention TP duplicated encoding vs stage-local CP image ownership with cache/error coordination",
+  "complete_patch_sha256": "d75320f44a9645979549168c9aaddb25b0c2bd4c8b36050904ccd7839101b1dc",
+  "cpu_tests": "18 real Gloo scenarios and 11 ownership tests on each host; CPU-only registered entry points",
+  "precommit": "all applicable changed-file hooks passed",
+  "test_harness_adjustment": "CustomTestCase adoption after GPU measurements; runtime hashes unchanged and CPU revalidated"
+}
