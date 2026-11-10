@@ -1,0 +1,37 @@
+[
+  {
+    "name": "cpu-tests",
+    "rc": 0,
+    "elapsed_s": 18.19259022688493
+  },
+  {
+    "name": "cuda-tests",
+    "rc": 0,
+    "elapsed_s": 23.049146495759487
+  },
+  {
+    "name": "sender",
+    "rc": 0,
+    "elapsed_s": 28.556259381119162
+  },
+  {
+    "name": "reference",
+    "rc": 0,
+    "elapsed_s": 19.393608919810504
+  },
+  {
+    "name": "profile",
+    "rc": 0,
+    "elapsed_s": 18.092396361753345
+  },
+  {
+    "name": "profile-check",
+    "rc": 0,
+    "elapsed_s": 0.06624483782798052
+  },
+  {
+    "name": "transport",
+    "rc": 0,
+    "elapsed_s": 64.7061390960589
+  }
+]

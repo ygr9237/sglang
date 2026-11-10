@@ -1,0 +1,250 @@
+diff --git a/python/sglang/srt/managers/scheduler_pp_mixin.py b/python/sglang/srt/managers/scheduler_pp_mixin.py
+index 091b894..855032f 100644
+--- a/python/sglang/srt/managers/scheduler_pp_mixin.py
++++ b/python/sglang/srt/managers/scheduler_pp_mixin.py
+@@ -46,6 +46,28 @@ if TYPE_CHECKING:
+     from sglang.srt.observability.forward_pass_metrics import FpmTiming
+ 
+ 
++def _pp_freeze_output_metadata(value):
++    """Keep nested tensor storage out of pickling on the PP comm stream."""
++    if isinstance(value, torch.Tensor):
++        if value.is_cuda:
++            logger.warning_once(
++                "PP output metadata contains a nested CUDA tensor; copying it "
++                "on the forward stream before CPU serialization."
++            )
++        # A small CPU view would otherwise pickle its entire backing storage.
++        return value.detach().to(device="cpu", copy=True, non_blocking=False)
++    if isinstance(value, list):
++        # Snapshot numeric logprob rows without recursing into every scalar.
++        if all(type(item) in (int, float) for item in value):
++            return value.copy()
++        return [_pp_freeze_output_metadata(item) for item in value]
++    if isinstance(value, tuple):
++        return tuple(_pp_freeze_output_metadata(item) for item in value)
++    if isinstance(value, dict):
++        return {key: _pp_freeze_output_metadata(item) for key, item in value.items()}
++    return value
++
++
+ def _pp_can_skip_output_comm(batch: ScheduleBatch) -> bool:
+     """Check if output send/recv can be skipped for this batch."""
+     return (
+@@ -897,6 +919,11 @@ class SchedulerPPMixin:
+             else None
+         )
+         add_auxiliary_output_to_pp_tensors(tensor_dict, auxiliary_output)
++        # Prepare metadata on the forward stream, before queued communication.
++        # Top-level tensors retain the existing device-to-device path.
++        for key, value in tensor_dict.items():
++            if not isinstance(value, torch.Tensor):
++                tensor_dict[key] = _pp_freeze_output_metadata(value)
+         return tensor_dict
+ 
+     def _pp_send_dict_to_next_stage(
+diff --git a/test/registered/e2e/parallelism/test_pp_output_metadata.py b/test/registered/e2e/parallelism/test_pp_output_metadata.py
+new file mode 100644
+index 0000000..800ff1b
+--- /dev/null
++++ b/test/registered/e2e/parallelism/test_pp_output_metadata.py
+@@ -0,0 +1,71 @@
++"""PP metadata must be ready for CPU serialization before switching streams."""
++
++import pickle
++import unittest
++from types import SimpleNamespace
++
++import torch
++
++from sglang.srt.distributed.parallel_state import _split_tensor_dict
++from sglang.srt.layers.logits_processor import LogitsProcessorOutput
++from sglang.srt.managers.scheduler_pp_mixin import SchedulerPPMixin
++from sglang.srt.managers.utils import GenerationBatchResult
++from sglang.test.ci.ci_register import register_cuda_ci
++from sglang.test.test_utils import CustomTestCase
++
++register_cuda_ci(est_time=5, stage="base-b", runner_config="1-gpu-small")
++
++
++class TestPPOutputMetadata(CustomTestCase):
++    @unittest.skipUnless(torch.cuda.is_available(), "CUDA is required")
++    def test_mixed_numeric_and_strided_cuda_metadata(self):
++        from sglang.srt.managers.scheduler_pp_mixin import _pp_freeze_output_metadata
++
++        forward = torch.cuda.Stream()
++        comm = torch.cuda.Stream()
++        with torch.cuda.stream(forward):
++            base = torch.arange(100000, dtype=torch.float32, device="cuda")
++            view = base.view(10000, 10)[5:7, :2]
++            frozen = _pp_freeze_output_metadata([7, view])
++            base.zero_()
++        with torch.cuda.stream(comm):
++            self.assertEqual(frozen[0], 7)
++            self.assertEqual(frozen[1].device.type, "cpu")
++            self.assertEqual(frozen[1].shape, (2, 2))
++            self.assertEqual(frozen[1].untyped_storage().nbytes(), 16)
++            restored = pickle.loads(pickle.dumps(frozen))
++            self.assertEqual(restored[1].tolist(), [[50, 51], [60, 61]])
++        forward.synchronize()
++
++    @unittest.skipUnless(torch.cuda.is_available(), "CUDA is required")
++    def test_nested_cuda_views_are_ready_before_communication(self):
++        forward = torch.cuda.Stream()
++        comm = torch.cuda.Stream()
++        with torch.cuda.stream(forward):
++            ids = torch.tensor([7], device="cuda")
++            values = torch.arange(1000, device="cuda", dtype=torch.float32)
++            result = GenerationBatchResult(
++                next_token_ids=ids,
++                logits_output=LogitsProcessorOutput(
++                    next_token_logits=None,
++                    next_token_token_ids_logprobs_val=[values[500:502]],
++                ),
++            )
++            wire = SchedulerPPMixin()._pp_prepare_tensor_dict(
++                result, SimpleNamespace(return_logprob=True)
++            )
++        with torch.cuda.stream(comm):
++            metadata, tensors = _split_tensor_dict(wire)
++            self.assertIs(tensors[0], ids)
++            frozen = wire["next_token_token_ids_logprobs_val"][0]
++            self.assertEqual(frozen.device.type, "cpu")
++            self.assertEqual(frozen.untyped_storage().nbytes(), 8)
++            payload = pickle.dumps(metadata)
++            restored = dict(pickle.loads(payload))  # Locally generated test metadata.
++            self.assertEqual(
++                restored["next_token_token_ids_logprobs_val"][0].tolist(), [500, 501]
++            )
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/test/registered/unit/managers/test_pp_output_exchange_order.py b/test/registered/unit/managers/test_pp_output_exchange_order.py
+index 686952c..f9fad17 100644
+--- a/test/registered/unit/managers/test_pp_output_exchange_order.py
++++ b/test/registered/unit/managers/test_pp_output_exchange_order.py
+@@ -11,11 +11,14 @@ send is waiting for, and both GPUs hang. Model the worst case, where every send
+ must rendezvous with the peer's recv at the head of its stream.
+ """
+ 
++import pickle
+ import unittest
+ from collections import deque
+ from contextlib import nullcontext
+ from types import SimpleNamespace
+ 
++import torch
++
+ from sglang.test.ci.ci_register import register_cpu_ci
+ from sglang.test.test_utils import (
+     CustomTestCase,
+@@ -26,7 +29,9 @@ from sglang.test.test_utils import (
+ maybe_stub_sgl_kernel()
+ 
+ from sglang.srt.environ import envs  # noqa: E402
++from sglang.srt.layers.logits_processor import LogitsProcessorOutput  # noqa: E402
+ from sglang.srt.managers.scheduler_pp_mixin import SchedulerPPMixin  # noqa: E402
++from sglang.srt.managers.utils import GenerationBatchResult  # noqa: E402
+ from sglang.srt.model_executor.forward_mode import ForwardMode  # noqa: E402
+ 
+ register_cpu_ci(est_time=11, suite="base-a-test-cpu")
+@@ -82,6 +87,98 @@ def _posted_output_ops(pp_rank, spec_relay, send_msg, recv_msg, **server_args):
+ 
+ 
+ class TestPPOutputExchangeOrder(CustomTestCase):
++    def test_numeric_metadata_lists_keep_independent_containers(self):
++        from sglang.srt.managers.scheduler_pp_mixin import _pp_freeze_output_metadata
++
++        for values in ([], [1, 2], [1.25, 2.5], [1, 2.5]):
++            with self.subTest(values=values):
++                expected = values.copy()
++                frozen = _pp_freeze_output_metadata(values)
++                self.assertIsNot(frozen, values)
++                self.assertEqual(frozen, expected)
++                values.append(99)
++                values[0] = -1
++                self.assertEqual(frozen, expected)
++
++    def test_numeric_prefix_does_not_hide_a_later_tensor(self):
++        from sglang.srt.managers.scheduler_pp_mixin import _pp_freeze_output_metadata
++
++        for dtype in (torch.float32, torch.int64):
++            with self.subTest(dtype=dtype):
++                base = torch.arange(100000, dtype=dtype)
++                view = base.view(10000, 10)[5:7, :2]
++                expected = view.clone()
++                frozen = _pp_freeze_output_metadata([7, view])
++                self.assertEqual(frozen[0], 7)
++                self.assertEqual(frozen[1].shape, view.shape)
++                self.assertEqual(frozen[1].dtype, dtype)
++                self.assertEqual(
++                    frozen[1].untyped_storage().nbytes(),
++                    view.numel() * view.element_size(),
++                )
++                base.zero_()
++                torch.testing.assert_close(frozen[1], expected)
++
++    def test_nested_logprob_views_serialize_only_their_own_storage(self):
++        """A tiny PP logprob row must not serialize or retain its large base."""
++        bases = [torch.arange(100000, dtype=d) for d in (torch.float32, torch.int64)]
++        views = [base.view(10000, 10)[5:6, :2] for base in bases]
++        expected = [view.clone() for view in views]
++        result = GenerationBatchResult(
++            next_token_ids=torch.tensor([7]),
++            logits_output=LogitsProcessorOutput(
++                next_token_logits=None,
++                input_top_logprobs_val=[[views[0]]],
++                input_top_logprobs_idx=[[views[1]]],
++            ),
++        )
++        wire = SchedulerPPMixin()._pp_prepare_tensor_dict(
++            result, SimpleNamespace(return_logprob=True)
++        )
++        fields = ("input_top_logprobs_val", "input_top_logprobs_idx")
++        for field, view in zip(fields, views):
++            frozen = wire[field][0][0]
++            self.assertEqual(frozen.dtype, view.dtype)
++            self.assertEqual(
++                frozen.untyped_storage().nbytes(),
++                frozen.numel() * frozen.element_size(),
++            )
++            self.assertNotEqual(frozen.data_ptr(), view.data_ptr())
++        for base in bases:
++            base.zero_()
++        payload = pickle.dumps(wire)
++        self.assertLess(len(payload), 4096)
++        restored = pickle.loads(payload)  # Only this test's locally generated data.
++        for field, values in zip(fields, expected):
++            torch.testing.assert_close(restored[field][0][0], values)
++
++    def test_nested_metadata_preserves_container_types_and_values(self):
++        """Tuple/dict metadata must not bypass the same tensor ownership rule."""
++        from sglang.srt.managers.scheduler_pp_mixin import _pp_freeze_output_metadata
++
++        base = torch.arange(1000)
++        wire = _pp_freeze_output_metadata({"rows": [(base[500:502], None, 7, False)]})
++        self.assertIsInstance(wire, dict)
++        self.assertIsInstance(wire["rows"], list)
++        self.assertIsInstance(wire["rows"][0], tuple)
++        self.assertEqual(wire["rows"][0][1:], (None, 7, False))
++        base.zero_()
++        self.assertEqual(wire["rows"][0][0].tolist(), [500, 501])
++        self.assertEqual(wire["rows"][0][0].untyped_storage().nbytes(), 16)
++
++    def test_top_level_output_tensor_keeps_communication_fast_path(self):
++        """The metadata fix must not clone top-level communication tensors."""
++        ids = torch.tensor([7])
++        result = GenerationBatchResult(
++            next_token_ids=ids,
++            logits_output=LogitsProcessorOutput(next_token_logits=None),
++        )
++        wire = SchedulerPPMixin()._pp_prepare_tensor_dict(
++            result, SimpleNamespace(return_logprob=False)
++        )
++        self.assertEqual(list(wire), ["next_token_ids"])
++        self.assertIs(wire["next_token_ids"], ids)
++
+     def test_two_in_flight_output_exchange_does_not_cross_deadlock(self):
+         for spec_relay in (False, True):
+             with self.subTest(spec_relay=spec_relay):

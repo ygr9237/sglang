@@ -1,0 +1,14 @@
+{
+  "source_revision": "11aa5e5b12b8160293b472eac12a8f1a28a57310",
+  "tested_raw_sha256": {
+    "python/sglang/srt/managers/scheduler_pp_mixin.py": "18b946bab404cebc1c3f30ac591856dd96ea25afd902fd362c2abf6acb35302c",
+    "test/registered/e2e/parallelism/test_pp_output_metadata.py": "c95842011731521aa9c42fbaade9e0437f001928b0a77349ed05f0ea2b707424",
+    "test/registered/unit/managers/test_pp_output_exchange_order.py": "9042b2d41247eed0268a3958b13b082425f5c2cff6fa644d7709573df0dad32b"
+  },
+  "git_lf_sha256": {
+    "python/sglang/srt/managers/scheduler_pp_mixin.py": "adeaaa802879dd9de600d7e2b8ef482851bf64cc7d154905d20c7e1da7725616",
+    "test/registered/e2e/parallelism/test_pp_output_metadata.py": "f518e1dea5ace17976b4b489b33eadd8da2d358db49b3534744fd7cce9be15d1",
+    "test/registered/unit/managers/test_pp_output_exchange_order.py": "0f1e1fc4a7342d5da039fe2a8ee596d9118685b8f01c30e5866a876afa7ca19f"
+  },
+  "note": "The isolated Windows source copies use CRLF; Git blobs use LF. Contents otherwise match the tested files."
+}

@@ -1,0 +1,22 @@
+USDT:2026-11-10 17:51:45 5750:5750 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-10 17:51:45 5750:5750 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-10 17:51:45 5750:5750 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-10 17:51:45 5750:5750 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-10 17:51:45 5750:5750 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-10 17:51:45 5750:5750 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-10 17:51:45 5750:5750 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-10 17:51:45 5750:5750 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-10 17:51:45 5750:5750 SyncActivityProfilerHandler.cpp:39] profiler_start
+PP output metadata contains a nested CUDA tensor; copying it on the forward stream before CPU serialization.
+USDT:2026-11-10 17:51:45 5750:5750 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-10 17:51:45 5750:5750 SyncActivityProfilerHandler.cpp:39] profiler_start
+PP output metadata contains a nested CUDA tensor; copying it on the forward stream before CPU serialization.
+USDT:2026-11-10 17:51:45 5750:5750 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-10 17:51:45 5750:5750 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-10 17:51:45 5750:5750 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-10 17:51:45 5750:5750 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-10 17:51:45 5750:5750 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-10 17:51:45 5750:5750 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-10 17:51:46 5750:5750 SyncActivityProfilerHandler.cpp:46] profiler_stop
+USDT:2026-11-10 17:51:46 5750:5750 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-10 17:51:47 5750:5750 SyncActivityProfilerHandler.cpp:46] profiler_stop

@@ -1,0 +1,20 @@
+{"case": "no_logprob_b1", "base_us": 4.1884999999999994, "fixed_us": 4.096, "samples": 1200}
+{"case": "no_logprob_b25", "base_us": 4.478, "fixed_us": 4.5405, "samples": 1200}
+{"case": "no_logprob_b50", "base_us": 4.4595, "fixed_us": 4.513, "samples": 1200}
+{"case": "top_level_tensor_b25", "base_us": 11.628, "fixed_us": 11.791, "samples": 1200}
+{"case": "python_top20_b25", "base_us": 138.84449999999998, "fixed_us": 62.0135, "samples": 1200}
+{"case": "python_top20_b50", "base_us": 266.707, "fixed_us": 111.491, "samples": 882}
+{"case": "cpu_rows_b1", "base_us": 61.8165, "fixed_us": 63.334, "samples": 1200}
+{"case": "cpu_rows_b25", "base_us": 1074.6415000000002, "fixed_us": 1068.1365, "samples": 204}
+{"case": "cpu_rows_b50", "base_us": 2111.6655, "fixed_us": 2101.3445, "samples": 114}
+{"case": "cpu_view32k_b1", "base_us": 61.3755, "fixed_us": 62.9975, "samples": 1200}
+{"case": "cpu_view32k_b25", "base_us": 1060.902, "fixed_us": 1058.626, "samples": 216}
+{"case": "cpu_view128k_b1", "base_us": 61.193, "fixed_us": 62.728, "samples": 1200}
+PP output metadata contains a nested CUDA tensor; copying it on the forward stream before CPU serialization.
+PP output metadata contains a nested CUDA tensor; copying it on the forward stream before CPU serialization.
+{"case": "cuda_rows_b1", "base_us": 97.812, "fixed_us": 97.2895, "samples": 1200}
+{"case": "cuda_rows_b25", "base_us": 1886.3065000000001, "fixed_us": 1864.1235000000001, "samples": 120}
+{"case": "cuda_rows_b50", "base_us": 3761.1975, "fixed_us": 3697.059, "samples": 60}
+{"case": "cuda_view32k_b1", "base_us": 97.0445, "fixed_us": 96.317, "samples": 1200}
+{"case": "cuda_view32k_b25", "base_us": 1873.2255, "fixed_us": 1838.9005, "samples": 120}
+{"case": "python_prompt_top20_32k", "base_us": 173980.766, "fixed_us": 69929.766, "samples": 18}

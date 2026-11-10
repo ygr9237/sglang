@@ -1,0 +1,13 @@
+$RUN_ROOT/source/python/sglang/srt/distributed/parallel_state.py:1659: UserWarning: The given buffer is not writable, and PyTorch does not support non-writable tensors. This means you can write to the underlying (supposedly non-writable) buffer using the tensor. You may want to copy the buffer to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/utils/tensor_new.cpp:1556.)
+  object_tensor = torch.frombuffer(pickle.dumps(obj), dtype=torch.uint8)
+[rank0]:[W1110 17:52:07.412501158 ProcessGroupNCCL.cpp:4207] Warning: An unbatched P2P op (send/recv) was called on this ProcessGroup with size 2.  In lazy initialization mode, this will result in a new 2-rank NCCL communicator to be created. (function operator())
+[rank1]:[W1110 17:52:07.413224922 ProcessGroupNCCL.cpp:4207] Warning: An unbatched P2P op (send/recv) was called on this ProcessGroup with size 2.  In lazy initialization mode, this will result in a new 2-rank NCCL communicator to be created. (function operator())
+{"transport_case": "no_logprob_b25", "arms": {"base": 382.8845, "fixed": 359.92150000000004}}
+{"transport_case": "python_top20_b25", "arms": {"base": 712.9105, "fixed": 564.6745}}
+{"transport_case": "cpu_rows_b25", "arms": {"base": 4449.5185, "fixed": 4534.4195}}
+{"transport_case": "cpu_view32k_b1", "arms": {"base": 874.2094999999999, "fixed": 882.236}}
+{"transport_case": "cpu_view32k_b25", "arms": {"base": 5620.436, "fixed": 5600.207}}
+PP output metadata contains a nested CUDA tensor; copying it on the forward stream before CPU serialization.
+PP output metadata contains a nested CUDA tensor; copying it on the forward stream before CPU serialization.
+{"transport_case": "cuda_rows_b25", "arms": {"base": 6580.3075, "fixed": 6422.8435}}
+{"transport_case": "cuda_view32k_b1", "arms": {"base": 972.37, "fixed": 966.073}}

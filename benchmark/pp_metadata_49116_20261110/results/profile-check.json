@@ -1,0 +1,12 @@
+{
+  "base": {
+    "cpu_clone_count": 50,
+    "d2h_count": 50,
+    "pickle_bytes": 20609
+  },
+  "fixed": {
+    "cpu_clone_count": 0,
+    "d2h_count": 50,
+    "pickle_bytes": 20609
+  }
+}

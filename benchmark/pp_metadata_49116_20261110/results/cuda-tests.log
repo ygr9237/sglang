@@ -1,0 +1,10 @@
+test_mixed_numeric_and_strided_cuda_metadata (__main__.TestPPOutputMetadata.test_mixed_numeric_and_strided_cuda_metadata) ... [CI Test Method] TestPPOutputMetadata.test_mixed_numeric_and_strided_cuda_metadata
+PP output metadata contains a nested CUDA tensor; copying it on the forward stream before CPU serialization.
+ok
+test_nested_cuda_views_are_ready_before_communication (__main__.TestPPOutputMetadata.test_nested_cuda_views_are_ready_before_communication) ... [CI Test Method] TestPPOutputMetadata.test_nested_cuda_views_are_ready_before_communication
+ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 3.143s
+
+OK

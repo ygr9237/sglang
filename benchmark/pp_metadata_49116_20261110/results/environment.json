@@ -1,0 +1,10 @@
+{
+  "python": "Python 3.12.16",
+  "cpu": "Intel(R) Xeon(R) 6776P",
+  "source_files": {
+    "python/sglang/srt/managers/scheduler_pp_mixin.py": "18b946bab404cebc1c3f30ac591856dd96ea25afd902fd362c2abf6acb35302c",
+    "test/registered/e2e/parallelism/test_pp_output_metadata.py": "c95842011731521aa9c42fbaade9e0437f001928b0a77349ed05f0ea2b707424",
+    "test/registered/unit/managers/test_pp_output_exchange_order.py": "9042b2d41247eed0268a3958b13b082425f5c2cff6fa644d7709573df0dad32b"
+  },
+  "platform": "Linux-5.15.0-119-generic-x86_64-with-glibc2.39"
+}
