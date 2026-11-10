@@ -1,0 +1,44 @@
+{
+  "published_base": "3830fb0713d2451d4e7a993ce7bef8c0490a15ed",
+  "unit_tests": {
+    "new": 30,
+    "regressions": 94,
+    "subtests": 45,
+    "skipped": 5
+  },
+  "component_l3_tests": {
+    "base": "0c44fbff44da7d1a11f0e8b4299e4b8a702ac414",
+    "backends": [
+      "python",
+      "rust"
+    ],
+    "intervals": [
+      0,
+      32768
+    ],
+    "gpu": "NVIDIA B300",
+    "transport": "TCP loopback",
+    "cases": 4,
+    "kda_endpoint_comparisons": 10,
+    "coverage": "Real host/device pools and transfers, with a controlled tree/index allocator fixture. No full-model DFLASH/PP service, final recomputation logits, HTTP or cross-node RDMA measurements."
+  },
+  "candidate_source_matches_component_validation": true,
+  "source_sha256_lf": {
+    "docs/docs/advanced_features/hicache.mdx": "0565bbf26bafa9f7066ab5b34a7f80fee2cd4be5053481ebd7ed6f864e2fd807",
+    "python/sglang/srt/arg_groups/field_order.py": "211a831cb71b2d8c7b531f166e6def0f325e66b32b5334ec5dbddbfc1c9a2b2f",
+    "python/sglang/srt/arg_groups/fields/memory.py": "2d4dbddcbcf84e25fd1c5e330c08cf4f9b8039c2cd885a0b4ee633217906569d",
+    "python/sglang/srt/arg_groups/hicache_hook.py": "625b683dde194ce5210c05124e512d04b59faf5c9c3e9b622a07614b484fc776",
+    "python/sglang/srt/mem_cache/base_prefix_cache.py": "9adbc387b06f220cc63453e97db5c9571c0abce2f8f99ad86c7e4bdd2bd95771",
+    "python/sglang/srt/mem_cache/rust_tree_core/adapter.py": "b93cf0be0bd6585343ce6c7db3d5e73162e9644362b337f7ab9299f04096e311",
+    "python/sglang/srt/mem_cache/unified_cache/components/mamba.py": "33b6876e14b6c2bb878ad839b59585b1d4e8c13273b32d02eaec79ddca0cc9c5",
+    "python/sglang/srt/mem_cache/unified_cache/unified_tree_core.py": "e2f139e5687874a66426ca2f173e34b7d5066996f647e4c72c16abf2f263d239",
+    "python/sglang/srt/mem_cache/unified_cache/unified_tree_core_interface.py": "b22c5d015b708171a2255224c7861710b738e72b60338cc515ca2fb1b79accb0",
+    "python/sglang/srt/mem_cache/unified_radix_cache.py": "49aaf163dd52cfaa97394c4c922f8a0c74f9af5d26f3f3bb61496f7d005afcc1",
+    "rust/sglang-radix-tree/src/node.rs": "22abfa8351e8c04ba50d921877b5480cb31174b60843975851512e4fc6e93563",
+    "rust/sglang-radix-tree/src/python_bindings.rs": "ddb2965fac77dffff44bd93605c74584dc23315249e366acc7f80f0ee59e111e",
+    "rust/sglang-radix-tree/src/unified_tree_core.rs": "b80e5bc38b3c0f9a543c7c30ad2a84dbdf48dd74feebdd7a8e668d7db97505ce",
+    "test/registered/unit/mem_cache/test_mamba_l3_snapshot_interval.py": "406dd2c088f2c97ea6e7c61864ec7d3df66ec7cc33ef73174edc229104fa4200"
+  },
+  "native_rust_checks": "Native crate Rustfmt and Clippy passed; unrelated Rust workspace checks were not run.",
+  "performance": "CPU storage backup-plan timings only; no serving speedup claim."
+}

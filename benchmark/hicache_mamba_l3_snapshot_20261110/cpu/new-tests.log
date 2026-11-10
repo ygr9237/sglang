@@ -1,0 +1,27 @@
+$RUN_ROOT/source/python/sglang/srt/layers/quantization/awq/awq.py:53: UserWarning: Only CUDA, HIP and XPU support AWQ currently.
+  warnings.warn(f"Only CUDA, HIP and XPU support AWQ currently.")
+============================= test session starts ==============================
+platform linux -- Python 3.12.16, pytest-9.2.0, pluggy-1.7.0
+rootdir: $RUN_ROOT/source/test
+configfile: pytest.ini
+plugins: typeguard-4.4.4, anyio-4.16.0, ai-dynamo-1.6.0, jaxtyping-0.3.11, platformdirs-4.13.6
+collected 30 items
+
+test/registered/unit/mem_cache/test_mamba_l3_snapshot_interval.py ...... [ 20%]
+........................                                                 [100%]
+
+=============================== warnings summary ===============================
+../../../../opt/sglang/lib/python3.12/site-packages/_pytest/config/__init__.py:1507
+  /opt/sglang/lib/python3.12/site-packages/_pytest/config/__init__.py:1507: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; anyio
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+../../../../opt/sglang/lib/python3.12/site-packages/_pytest/config/__init__.py:1507
+  /opt/sglang/lib/python3.12/site-packages/_pytest/config/__init__.py:1507: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; sglang
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+../../../../opt/sglang/lib/python3.12/site-packages/_pytest/config/__init__.py:1507
+  /opt/sglang/lib/python3.12/site-packages/_pytest/config/__init__.py:1507: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; triton
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 30 passed, 3 warnings in 8.54s ========================
