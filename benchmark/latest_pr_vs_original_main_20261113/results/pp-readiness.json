@@ -1,0 +1,28 @@
+[
+  {
+    "arm": "base",
+    "case": "cuda_view32k_b1",
+    "metadata_devices": [
+      "cuda:0",
+      "cuda:0"
+    ],
+    "metadata_storage_bytes": [
+      2621440,
+      5242880
+    ],
+    "cpu_ready": false
+  },
+  {
+    "arm": "fixed",
+    "case": "cuda_view32k_b1",
+    "metadata_devices": [
+      "cpu",
+      "cpu"
+    ],
+    "metadata_storage_bytes": [
+      80,
+      160
+    ],
+    "cpu_ready": true
+  }
+]

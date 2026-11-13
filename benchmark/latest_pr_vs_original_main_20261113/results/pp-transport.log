@@ -1,0 +1,9 @@
+/tmp/codex-sglang-pr5-20261112-run/pr49116-20261113/source/python/sglang/srt/distributed/parallel_state.py:1659: UserWarning: The given buffer is not writable, and PyTorch does not support non-writable tensors. This means you can write to the underlying (supposedly non-writable) buffer using the tensor. You may want to copy the buffer to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/utils/tensor_new.cpp:1556.)
+  object_tensor = torch.frombuffer(pickle.dumps(obj), dtype=torch.uint8)
+[rank0]:[W1113 12:08:41.378029390 ProcessGroupNCCL.cpp:4207] Warning: An unbatched P2P op (send/recv) was called on this ProcessGroup with size 2.  In lazy initialization mode, this will result in a new 2-rank NCCL communicator to be created. (function operator())
+[rank1]:[W1113 12:08:41.379771773 ProcessGroupNCCL.cpp:4207] Warning: An unbatched P2P op (send/recv) was called on this ProcessGroup with size 2.  In lazy initialization mode, this will result in a new 2-rank NCCL communicator to be created. (function operator())
+{"transport_case": "no_logprob_b25", "arms": {"base": 337.67449999999997, "fixed": 338.27099999999996}}
+{"transport_case": "python_top20_b25", "arms": {"base": 398.7975, "fixed": 408.25149999999996}}
+{"transport_case": "cpu_rows_b25", "arms": {"base": 4841.68, "fixed": 5583.698}}
+{"transport_case": "cpu_view32k_b1", "arms": {"base": 13275.8805, "fixed": 846.8154999999999}}
+{"transport_case": "cpu_view32k_b25", "arms": {"base": 639339.719, "fixed": 4606.3165}}

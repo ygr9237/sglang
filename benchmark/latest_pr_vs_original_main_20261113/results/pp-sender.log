@@ -1,0 +1,9 @@
+{"case": "no_logprob_b25", "base_us": 4.0825, "fixed_us": 4.24, "samples": 1200}
+{"case": "python_top20_b25", "base_us": 15.215499999999999, "fixed_us": 22.518, "samples": 1200}
+{"case": "cpu_rows_b25", "base_us": 985.2605, "fixed_us": 1077.3429999999998, "samples": 228}
+{"case": "cpu_view32k_b1", "base_us": 2960.2174999999997, "fixed_us": 68.634, "samples": 66}
+{"case": "cpu_view32k_b25", "base_us": 270834.67350000003, "fixed_us": 2123.751, "samples": 18}
+PP output metadata contains a nested CUDA tensor; copying it on the forward stream before CPU serialization.
+{"case": "cuda_rows_b25", "base_us": 3341.7915000000003, "fixed_us": 3125.4545, "samples": 66}
+{"case": "cuda_view32k_b1", "base_us": 3056.178, "fixed_us": 167.613, "samples": 72}
+{"case": "python_prompt_top20_32k", "base_us": 26705.326, "fixed_us": 32000.951500000003, "samples": 18}

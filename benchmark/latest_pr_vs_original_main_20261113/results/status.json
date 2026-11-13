@@ -1,0 +1,138 @@
+{
+  "running": false,
+  "comparison": "original upstream main vs latest PR head only",
+  "steps": [
+    {
+      "name": "vision",
+      "command": [
+        "/tmp/codex-sglang-pr5-20261112-run/venv/bin/python",
+        "-m",
+        "torch.distributed.run",
+        "--standalone",
+        "--nproc-per-node=2",
+        "/tmp/codex-sglang-pr5-20261112-run/pr-final-main-20261113/vision_main.py",
+        "latest-vs-main"
+      ],
+      "devices": "0,1",
+      "started": 1794542871.0711627,
+      "exit_code": 0,
+      "elapsed_s": 150.25145435333252
+    },
+    {
+      "name": "pp-sender",
+      "command": [
+        "/tmp/codex-sglang-pr5-20261112-run/venv/bin/python",
+        "/tmp/codex-sglang-pr5-20261112-run/pr-final-main-20261113/pp_main.py",
+        "sender"
+      ],
+      "devices": "6",
+      "started": 1794542871.0719838,
+      "exit_code": 0,
+      "elapsed_s": 31.76653552055359
+    },
+    {
+      "name": "pp-transport",
+      "command": [
+        "/tmp/codex-sglang-pr5-20261112-run/venv/bin/python",
+        "-m",
+        "torch.distributed.run",
+        "--standalone",
+        "--nproc-per-node=2",
+        "/tmp/codex-sglang-pr5-20261112-run/pr-final-main-20261113/pp_main.py",
+        "transport"
+      ],
+      "devices": "6,7",
+      "started": 1794542902.8393967,
+      "exit_code": 0,
+      "elapsed_s": 132.5092260837555
+    },
+    {
+      "name": "vision-clean",
+      "command": [
+        "/tmp/codex-sglang-pr5-20261112-run/venv/bin/python",
+        "-m",
+        "torch.distributed.run",
+        "--standalone",
+        "--nproc-per-node=2",
+        "/tmp/codex-sglang-pr5-20261112-run/pr-final-main-20261113/vision_main.py",
+        "latest-vs-main"
+      ],
+      "devices": "0,1",
+      "started": 1794543215.6249971,
+      "exit_code": 0,
+      "elapsed_s": 175.56743121147156
+    },
+    {
+      "name": "pp-sender-clean",
+      "command": [
+        "/tmp/codex-sglang-pr5-20261112-run/venv/bin/python",
+        "/tmp/codex-sglang-pr5-20261112-run/pr-final-main-20261113/pp_main.py",
+        "sender"
+      ],
+      "devices": "6",
+      "started": 1794543391.1935737,
+      "exit_code": 0,
+      "elapsed_s": 28.20596146583557
+    }
+  ],
+  "latest_source_hashes": {
+    "/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/source/python/sglang/srt/managers/mm_schedule.py": "a125852432300a04c2672017dcc2eeda833f640793c9451f69d6fb82b8319aff",
+    "/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/source/python/sglang/srt/models/kimi_k3.py": "1c006da26f2f6560ae5261866ea3017b11853242a1ff424435fbec74b06c3ef7",
+    "/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/source/python/sglang/srt/multimodal/mm_utils.py": "4436feca788b3930ccf6834d5b7a9299d97734c9d1b1bb3c28f21201221bd69b",
+    "/tmp/codex-sglang-pr5-20261112-run/pr49116-20261113/source/python/sglang/srt/managers/scheduler_pp_mixin.py": "9b02c073a05e87cc7adf9ea02db33f1a45aa5d6222671d86b2a6a8b71ac99aaa"
+  },
+  "successful": true,
+  "vision": [
+    {
+      "images": 1,
+      "cache": "cold",
+      "original_main_ms": 10.9943208694458,
+      "latest_pr_ms": 12.692062377929688,
+      "latency_change_percent": 15.441986173080146,
+      "bit_identical": true
+    },
+    {
+      "images": 1,
+      "cache": "hot",
+      "original_main_ms": 0.044593121856451035,
+      "latest_pr_ms": 0.4935585856437683,
+      "latency_change_percent": 1006.8042897570043,
+      "bit_identical": true
+    },
+    {
+      "images": 10,
+      "cache": "cold",
+      "original_main_ms": 91.57943725585938,
+      "latest_pr_ms": 47.87481117248535,
+      "latency_change_percent": -47.72318698712875,
+      "bit_identical": true
+    },
+    {
+      "images": 10,
+      "cache": "hot",
+      "original_main_ms": 0.11513475328683853,
+      "latest_pr_ms": 0.5589025318622589,
+      "latency_change_percent": 385.4333864509606,
+      "bit_identical": true
+    },
+    {
+      "images": 20,
+      "cache": "cold",
+      "original_main_ms": 184.02172088623047,
+      "latest_pr_ms": 93.45745468139648,
+      "latency_change_percent": -49.21390027692677,
+      "bit_identical": true
+    },
+    {
+      "images": 20,
+      "cache": "hot",
+      "original_main_ms": 0.19673118740320206,
+      "latest_pr_ms": 0.6240704357624054,
+      "latency_change_percent": 217.21987957271276,
+      "bit_identical": true
+    }
+  ],
+  "primary_vision_run": "vision-clean",
+  "primary_pp_sender_run": "pp-sender-clean",
+  "pp_transport_run": "pp-transport"
+}
