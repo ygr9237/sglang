@@ -1,0 +1,54 @@
+{
+  "producer_layouts": [
+    {
+      "stage": "PREFILL",
+      "kind": "top",
+      "no_copy_to_cpu": false,
+      "passed": true
+    },
+    {
+      "stage": "PREFILL",
+      "kind": "top",
+      "no_copy_to_cpu": true,
+      "passed": true
+    },
+    {
+      "stage": "PREFILL",
+      "kind": "token_ids",
+      "no_copy_to_cpu": false,
+      "passed": true
+    },
+    {
+      "stage": "PREFILL",
+      "kind": "token_ids",
+      "no_copy_to_cpu": true,
+      "passed": true
+    },
+    {
+      "stage": "DECODE",
+      "kind": "top",
+      "no_copy_to_cpu": false,
+      "passed": true
+    },
+    {
+      "stage": "DECODE",
+      "kind": "top",
+      "no_copy_to_cpu": true,
+      "passed": true
+    },
+    {
+      "stage": "DECODE",
+      "kind": "token_ids",
+      "no_copy_to_cpu": false,
+      "passed": true
+    },
+    {
+      "stage": "DECODE",
+      "kind": "token_ids",
+      "no_copy_to_cpu": true,
+      "passed": true
+    }
+  ],
+  "routed_experts_preserved_without_copy": true,
+  "cases_passed": 9
+}

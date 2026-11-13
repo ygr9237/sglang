@@ -1,0 +1,28 @@
+/tmp/codex-sglang-pr5-20261112-run/pr49116-20261113/source/python/sglang/srt/layers/quantization/awq/awq.py:53: UserWarning: Only CUDA, HIP and XPU support AWQ currently.
+  warnings.warn(f"Only CUDA, HIP and XPU support AWQ currently.")
+test_nested_logprob_views_serialize_only_their_own_storage (__main__.TestPPOutputExchangeOrder.test_nested_logprob_views_serialize_only_their_own_storage)
+A tiny PP logprob row must not serialize or retain its large base. ... [CI Test Method] TestPPOutputExchangeOrder.test_nested_logprob_views_serialize_only_their_own_storage
+ok
+test_nested_metadata_preserves_container_types_and_values (__main__.TestPPOutputExchangeOrder.test_nested_metadata_preserves_container_types_and_values)
+Tuple/dict metadata must not bypass the same tensor ownership rule. ... [CI Test Method] TestPPOutputExchangeOrder.test_nested_metadata_preserves_container_types_and_values
+ok
+test_numeric_logprob_rows_keep_independent_containers (__main__.TestPPOutputExchangeOrder.test_numeric_logprob_rows_keep_independent_containers) ... [CI Test Method] TestPPOutputExchangeOrder.test_numeric_logprob_rows_keep_independent_containers
+ok
+test_numeric_prefix_does_not_hide_a_later_tensor (__main__.TestPPOutputExchangeOrder.test_numeric_prefix_does_not_hide_a_later_tensor) ... [CI Test Method] TestPPOutputExchangeOrder.test_numeric_prefix_does_not_hide_a_later_tensor
+ok
+test_only_first_rank_fences_output_recv_on_its_forward (__main__.TestPPOutputExchangeOrder.test_only_first_rank_fences_output_recv_on_its_forward)
+With the fence on, rank 0 must not post its output recv before its own ... [CI Test Method] TestPPOutputExchangeOrder.test_only_first_rank_fences_output_recv_on_its_forward
+ok
+test_top_level_output_tensor_keeps_communication_fast_path (__main__.TestPPOutputExchangeOrder.test_top_level_output_tensor_keeps_communication_fast_path)
+The metadata fix must not clone top-level communication tensors. ... [CI Test Method] TestPPOutputExchangeOrder.test_top_level_output_tensor_keeps_communication_fast_path
+ok
+test_two_in_flight_output_exchange_does_not_cross_deadlock (__main__.TestPPOutputExchangeOrder.test_two_in_flight_output_exchange_does_not_cross_deadlock) ... [CI Test Method] TestPPOutputExchangeOrder.test_two_in_flight_output_exchange_does_not_cross_deadlock
+ok
+test_middle_prefill_chunks_keep_their_output_message (__main__.TestPPOutputSkipWhileCapturingRoutedExperts.test_middle_prefill_chunks_keep_their_output_message)
+The output message carries a chunk's routed experts to the first ... [CI Test Method] TestPPOutputSkipWhileCapturingRoutedExperts.test_middle_prefill_chunks_keep_their_output_message
+ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.068s
+
+OK

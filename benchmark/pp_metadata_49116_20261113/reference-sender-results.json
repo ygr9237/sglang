@@ -1,0 +1,89 @@
+{
+  "kind": "sender_prepare_split_pickle",
+  "rounds": 6,
+  "warmups_per_arm": 3,
+  "cases": [
+    {
+      "case": {
+        "name": "python_prompt_top20_32k",
+        "kind": "python_prompt",
+        "batch": 1,
+        "storage_rows": 32768
+      },
+      "iterations_per_round": 3,
+      "arms": {
+        "base": {
+          "prepare_us": {
+            "p50_us": 5.936999999999999,
+            "p95_us": 12.06069999999999,
+            "mean_us": 7.189388888888889,
+            "samples": 18
+          },
+          "split_us": {
+            "p50_us": 7.6695,
+            "p95_us": 28.112649999999963,
+            "mean_us": 11.327055555555555,
+            "samples": 18
+          },
+          "pickle_us": {
+            "p50_us": 12078.4755,
+            "p95_us": 15838.902099999996,
+            "mean_us": 12629.677277777777,
+            "samples": 18
+          },
+          "total_us": {
+            "p50_us": 12091.4235,
+            "p95_us": 15871.993199999995,
+            "mean_us": 12648.193722222222,
+            "samples": 18
+          },
+          "pickle_bytes": 9308003,
+          "round_median_total_us": [
+            15376.518,
+            12178.084,
+            11980.024,
+            11955.623,
+            12169.857,
+            12165.047
+          ]
+        },
+        "fixed": {
+          "prepare_us": {
+            "p50_us": 4797.9015,
+            "p95_us": 5759.609999999998,
+            "mean_us": 4954.9595,
+            "samples": 18
+          },
+          "split_us": {
+            "p50_us": 8.681000000000001,
+            "p95_us": 13.108099999999984,
+            "mean_us": 9.677777777777777,
+            "samples": 18
+          },
+          "pickle_us": {
+            "p50_us": 12005.921,
+            "p95_us": 13384.515099999999,
+            "mean_us": 12189.388444444445,
+            "samples": 18
+          },
+          "total_us": {
+            "p50_us": 16902.188000000002,
+            "p95_us": 19181.04005,
+            "mean_us": 17154.02572222222,
+            "samples": 18
+          },
+          "pickle_bytes": 9308003,
+          "round_median_total_us": [
+            17482.253,
+            17039.945,
+            16577.64,
+            16699.557,
+            17081.839,
+            16530.615
+          ]
+        }
+      }
+    }
+  ],
+  "complete": true
+}

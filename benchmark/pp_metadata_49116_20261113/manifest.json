@@ -1,0 +1,101 @@
+{
+  "date": "2026-11-13",
+  "candidate_commit": "db70c52999cf1d31d971008cf79939af47d420c9",
+  "files": [
+    {
+      "path": "base/scheduler_pp_mixin.py",
+      "sha256": "adeaaa802879dd9de600d7e2b8ef482851bf64cc7d154905d20c7e1da7725616",
+      "bytes": 86534
+    },
+    {
+      "path": "bench_pp_output_metadata.py",
+      "sha256": "1d1ff6f6644a5469511dc981475a4ac464d30b1333d512e6aa3b5e312ed07f09",
+      "bytes": 15497
+    },
+    {
+      "path": "candidate.patch",
+      "sha256": "583284bf94100da5ec7b0ab69461e79ea050df77aae3b809dcb8a32a07ca6841",
+      "bytes": 12560
+    },
+    {
+      "path": "controlled_transport.py",
+      "sha256": "689229eab064b0d90349da38f76f3ecfaf5a00ac918bc700488795372d2382f6",
+      "bytes": 730
+    },
+    {
+      "path": "fixed/scheduler_pp_mixin.py",
+      "sha256": "9b02c073a05e87cc7adf9ea02db33f1a45aa5d6222671d86b2a6a8b71ac99aaa",
+      "bytes": 96771
+    },
+    {
+      "path": "numeric_reference.py",
+      "sha256": "f7b87ba3fc54a420130fc2728dd53ad83cf504cd19933dd7e06ce7909ab09469",
+      "bytes": 720
+    },
+    {
+      "path": "producer_probe.py",
+      "sha256": "6ac83c99ea4c969fe24b717cb4e5cf1d13d931feb0ce4d5ea8c4f3b929851413",
+      "bytes": 3046
+    },
+    {
+      "path": "profiles.json",
+      "sha256": "9a78018bc550fc1326fef900201adb1952d41cd9cf69dcf51a133cd1e0c0dfe8",
+      "bytes": 17418
+    },
+    {
+      "path": "README.md",
+      "sha256": "731a08279636830d8e6e3ac8c76b8a09cdfe3da46b4063a3e53d83852f6a6587",
+      "bytes": 3567
+    },
+    {
+      "path": "reference-sender-results.json",
+      "sha256": "a2017563b0f95f0ec08daff748b03a482e3b47159a67eb28d7defff873db90b2",
+      "bytes": 2296
+    },
+    {
+      "path": "results/cpu-tests.log",
+      "sha256": "e157c2f8f3164b67ecb2dd5249567d040de90c4e5f81d1a1c418776d9a5d0976",
+      "bytes": 2741
+    },
+    {
+      "path": "results/cuda-tests.log",
+      "sha256": "a47ee619e202a0aaab17043d6ffd70f21a1d400f60d5693e275f4d4f7663b5ab",
+      "bytes": 445
+    },
+    {
+      "path": "results/diff-coverage.json",
+      "sha256": "b1bfc9fa73bf0d34828460a8a5d29997231da960c6ed67e491f49c4588f7aa6f",
+      "bytes": 437
+    },
+    {
+      "path": "results/precommit-all-files.log",
+      "sha256": "858053c885db4cc863ace5e094a93e4b3264f5cd41bbfca5c1846ea537f53341",
+      "bytes": 4370
+    },
+    {
+      "path": "results/producer-layouts.json",
+      "sha256": "377b732a9c5ac01d1cc21fd99fadce7f8ad79169c448c664439678795a9ae339",
+      "bytes": 1013
+    },
+    {
+      "path": "sender-results.json",
+      "sha256": "d3353036316c7bf03fc11126b535e1a2ec2a69c7b0f433bfc0700f0064d7af24",
+      "bytes": 37466
+    },
+    {
+      "path": "summary.json",
+      "sha256": "a252a71c124ffcef4b92908868a166b1aaa2be64d2c60cc6a06cd94b3fb6a78b",
+      "bytes": 2139
+    },
+    {
+      "path": "transport-results.json",
+      "sha256": "4710137a9a89f19e50f3411f8d3489199c09f7b199badd3945eaa37918c6aca4",
+      "bytes": 305188
+    },
+    {
+      "path": "unpatched/scheduler_pp_mixin.py",
+      "sha256": "b00e171846e10d822e15cbb58bef889ddc12bff3287ef809b7db7c7ab064fb78",
+      "bytes": 94832
+    }
+  ]
+}
