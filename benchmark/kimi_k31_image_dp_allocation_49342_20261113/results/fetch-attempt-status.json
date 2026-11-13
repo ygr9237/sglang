@@ -1,0 +1,37 @@
+{
+  "running": false,
+  "before": "5a6684f877e3a3759e9049342bf9af5bf46a2638",
+  "steps": [
+    {
+      "name": "clone",
+      "command": [
+        "git",
+        "clone",
+        "--shared",
+        "--no-checkout",
+        "/tmp/codex-sglang-pr5-20261112-run/source",
+        "/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/source"
+      ],
+      "devices": "99",
+      "started": 1794540825.6399853,
+      "exit_code": 0,
+      "elapsed_s": 0.033
+    },
+    {
+      "name": "fetch-pr",
+      "command": [
+        "git",
+        "fetch",
+        "--depth=3",
+        "https://github.com/sgl-project/sglang.git",
+        "refs/pull/49342/head"
+      ],
+      "devices": "99",
+      "started": 1794540825.6735978,
+      "exit_code": 128,
+      "elapsed_s": 130.751
+    }
+  ],
+  "successful": false,
+  "error": "fetch-pr: expected 0, got 128"
+}

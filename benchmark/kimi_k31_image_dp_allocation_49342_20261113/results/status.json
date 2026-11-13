@@ -1,0 +1,270 @@
+{
+  "running": false,
+  "before": "5a6684f877e3a3759e9049342bf9af5bf46a2638",
+  "steps": [
+    {
+      "name": "clone",
+      "command": [
+        "git",
+        "clone",
+        "--no-local",
+        "--no-checkout",
+        "/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/seed.git",
+        "/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/source"
+      ],
+      "devices": "99",
+      "started": 1794541181.594608,
+      "exit_code": 0,
+      "elapsed_s": 1.918
+    },
+    {
+      "name": "checkout",
+      "command": [
+        "git",
+        "checkout",
+        "-b",
+        "codex/pr49342-validation",
+        "5a6684f877e3a3759e9049342bf9af5bf46a2638"
+      ],
+      "devices": "99",
+      "started": 1794541183.5132341,
+      "exit_code": 0,
+      "elapsed_s": 0.767
+    },
+    {
+      "name": "apply-check",
+      "command": [
+        "git",
+        "apply",
+        "--check",
+        "/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/candidate.patch"
+      ],
+      "devices": "99",
+      "started": 1794541184.2804558,
+      "exit_code": 0,
+      "elapsed_s": 0.009
+    },
+    {
+      "name": "apply",
+      "command": [
+        "git",
+        "apply",
+        "/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/candidate.patch"
+      ],
+      "devices": "99",
+      "started": 1794541184.289797,
+      "exit_code": 0,
+      "elapsed_s": 0.004
+    },
+    {
+      "name": "environment",
+      "command": [
+        "/tmp/codex-sglang-pr5-20261112-run/venv/bin/python",
+        "-c",
+        "import torch,sys,transformers,json; print(json.dumps({'python':sys.version,'torch':torch.__version__,'transformers':transformers.__version__}))"
+      ],
+      "devices": "99",
+      "started": 1794541184.2942705,
+      "exit_code": 0,
+      "elapsed_s": 4.221
+    },
+    {
+      "name": "negative-control",
+      "command": [
+        "/tmp/codex-sglang-pr5-20261112-run/venv/bin/python",
+        "test/registered/unit/multimodal/test_kimi_k3_image_dp_consensus.py",
+        "-v"
+      ],
+      "devices": "99",
+      "started": 1794541188.522963,
+      "exit_code": 1,
+      "elapsed_s": 31.41
+    },
+    {
+      "name": "ownership",
+      "command": [
+        "/tmp/codex-sglang-pr5-20261112-run/venv/bin/python",
+        "test/registered/unit/multimodal/test_kimi_k3_pcp_vision_dp.py",
+        "-v"
+      ],
+      "devices": "99",
+      "started": 1794541219.9356234,
+      "exit_code": 0,
+      "elapsed_s": 20.645
+    },
+    {
+      "name": "consensus",
+      "command": [
+        "/tmp/codex-sglang-pr5-20261112-run/venv/bin/python",
+        "test/registered/unit/multimodal/test_kimi_k3_image_dp_consensus.py",
+        "-v"
+      ],
+      "devices": "99",
+      "started": 1794541240.5819612,
+      "exit_code": 0,
+      "elapsed_s": 21.396
+    },
+    {
+      "name": "cpu-coverage",
+      "command": [
+        "/tmp/codex-sglang-pr5-20261112-run/venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile=/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/coverage.ini",
+        "-m",
+        "pytest",
+        "test/registered/unit/multimodal/test_kimi_k3_pcp_vision_dp.py",
+        "test/registered/unit/multimodal/test_kimi_k3_image_dp_consensus.py",
+        "test/registered/unit/multimodal/test_mrope_encoder_utils.py",
+        "test/registered/unit/models/test_kimi_k25.py",
+        "test/registered/unit/models/test_kimi_vl.py",
+        "test/registered/unit/models/test_kimi_k3_vision.py",
+        "-v"
+      ],
+      "devices": "99",
+      "started": 1794541261.9794323,
+      "exit_code": 0,
+      "elapsed_s": 53.743
+    },
+    {
+      "name": "gpu-before",
+      "command": [
+        "/tmp/codex-sglang-pr5-20261112-run/venv/bin/python",
+        "-m",
+        "torch.distributed.run",
+        "--standalone",
+        "--nproc-per-node=2",
+        "/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/gpu_bench.py",
+        "before"
+      ],
+      "devices": "0,1",
+      "started": 1794541315.7234235,
+      "exit_code": 0,
+      "elapsed_s": 92.297
+    },
+    {
+      "name": "gpu-after",
+      "command": [
+        "/tmp/codex-sglang-pr5-20261112-run/venv/bin/python",
+        "-m",
+        "torch.distributed.run",
+        "--standalone",
+        "--nproc-per-node=2",
+        "--module",
+        "coverage",
+        "run",
+        "--rcfile=/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/coverage.ini",
+        "-p",
+        "/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/gpu_bench.py",
+        "after"
+      ],
+      "devices": "0,1",
+      "started": 1794541408.022292,
+      "exit_code": 0,
+      "elapsed_s": 51.792
+    },
+    {
+      "name": "coverage-combine",
+      "command": [
+        "/tmp/codex-sglang-pr5-20261112-run/venv/bin/python",
+        "-m",
+        "coverage",
+        "combine",
+        "--rcfile=/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/coverage.ini"
+      ],
+      "devices": "99",
+      "started": 1794541459.815935,
+      "exit_code": 0,
+      "elapsed_s": 0.316
+    },
+    {
+      "name": "coverage-xml",
+      "command": [
+        "/tmp/codex-sglang-pr5-20261112-run/venv/bin/python",
+        "-m",
+        "coverage",
+        "xml",
+        "--rcfile=/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/coverage.ini",
+        "-o",
+        "/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/results/coverage.xml"
+      ],
+      "devices": "99",
+      "started": 1794541460.1324418,
+      "exit_code": 0,
+      "elapsed_s": 13.985
+    },
+    {
+      "name": "fix-diff-coverage",
+      "command": [
+        "/tmp/codex-sglang-pr5-20261112-run/venv/bin/diff-cover",
+        "/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/results/coverage.xml",
+        "--compare-branch=HEAD",
+        "--fail-under=60",
+        "--json-report=/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/results/fix-diff-coverage.json"
+      ],
+      "devices": "99",
+      "started": 1794541474.1186583,
+      "exit_code": 0,
+      "elapsed_s": 0.766
+    },
+    {
+      "name": "pr-diff-coverage",
+      "command": [
+        "/tmp/codex-sglang-pr5-20261112-run/venv/bin/diff-cover",
+        "/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/results/coverage.xml",
+        "--compare-branch=704681229f1cdda291dbd2261dabb2ae80a4a49d",
+        "--fail-under=60",
+        "--json-report=/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/results/pr-diff-coverage.json"
+      ],
+      "devices": "99",
+      "started": 1794541474.885908,
+      "exit_code": 0,
+      "elapsed_s": 0.916
+    },
+    {
+      "name": "precommit-all-files",
+      "command": [
+        "/tmp/codex-sglang-pr5-20261112-run/venv/bin/pre-commit",
+        "run",
+        "--all-files",
+        "--show-diff-on-failure"
+      ],
+      "devices": "99",
+      "started": 1794541475.8033385,
+      "exit_code": 0,
+      "elapsed_s": 103.606
+    },
+    {
+      "name": "diff-check",
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "HEAD"
+      ],
+      "devices": "99",
+      "started": 1794541579.411008,
+      "exit_code": 0,
+      "elapsed_s": 0.066
+    },
+    {
+      "name": "final-status",
+      "command": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "devices": "99",
+      "started": 1794541579.4784157,
+      "exit_code": 0,
+      "elapsed_s": 0.116
+    }
+  ],
+  "sha256": {
+    "python/sglang/srt/multimodal/mm_utils.py": "4436feca788b3930ccf6834d5b7a9299d97734c9d1b1bb3c28f21201221bd69b",
+    "test/registered/unit/multimodal/test_kimi_k3_pcp_vision_dp.py": "d1f10ea21c9a928c9b8b65a4b55544bbb2840adc9635743df610f19032960c09",
+    "test/registered/unit/multimodal/test_kimi_k3_image_dp_consensus.py": "3bc2cc340f9d1666eb4b5aedcbdc38fe34b0d95aab4a00cd26f425c66b9b992f"
+  },
+  "successful": true
+}

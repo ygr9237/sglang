@@ -1,0 +1,141 @@
+{
+  "running": false,
+  "command": [
+    "/tmp/codex-sglang-pr5-20261112-run/venv/bin/python",
+    "-m",
+    "torch.distributed.run",
+    "--standalone",
+    "--nproc-per-node=2",
+    "/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/gpu_bench.py",
+    "after"
+  ],
+  "devices": "0,1",
+  "coverage_instrumentation": false,
+  "started": 1794541624.006541,
+  "exit_code": 0,
+  "elapsed_s": 38.66910457611084,
+  "successful": true,
+  "all_outputs_bit_identical": true,
+  "comparisons": [
+    {
+      "rank": 0,
+      "images": 1,
+      "cache": "cold",
+      "before_ms": 10.460794925689697,
+      "after_ms": 13.629374504089355,
+      "change_percent": 30.290045841719326,
+      "bit_identical": true,
+      "output_sha256": "f2cb2e6d82e0f73bf2e20c32777ca188d4b190d48b758788b0ef8bb63529a9cb"
+    },
+    {
+      "rank": 0,
+      "images": 1,
+      "cache": "hot",
+      "before_ms": 0.5439678132534027,
+      "after_ms": 0.5477871894836426,
+      "change_percent": 0.7021327617523276,
+      "bit_identical": true,
+      "output_sha256": "f2cb2e6d82e0f73bf2e20c32777ca188d4b190d48b758788b0ef8bb63529a9cb"
+    },
+    {
+      "rank": 0,
+      "images": 10,
+      "cache": "cold",
+      "before_ms": 47.66865158081055,
+      "after_ms": 47.49810028076172,
+      "change_percent": -0.35778503144713314,
+      "bit_identical": true,
+      "output_sha256": "d14cd1ec31ba95311dae75e2195e53dbbbc4cb8c799ca1887248870f6975d6e2"
+    },
+    {
+      "rank": 0,
+      "images": 10,
+      "cache": "hot",
+      "before_ms": 0.5367831289768219,
+      "after_ms": 0.43197302520275116,
+      "change_percent": -19.52559574177608,
+      "bit_identical": true,
+      "output_sha256": "d14cd1ec31ba95311dae75e2195e53dbbbc4cb8c799ca1887248870f6975d6e2"
+    },
+    {
+      "rank": 0,
+      "images": 20,
+      "cache": "cold",
+      "before_ms": 93.6811752319336,
+      "after_ms": 93.52848815917969,
+      "change_percent": -0.16298586388981962,
+      "bit_identical": true,
+      "output_sha256": "06e5cc9f8f41557529ccb5d25e21cab9b20a920551856a3bc9c2b7268eda8ef0"
+    },
+    {
+      "rank": 0,
+      "images": 20,
+      "cache": "hot",
+      "before_ms": 0.6627175211906433,
+      "after_ms": 0.5385693907737732,
+      "change_percent": -18.733189699560782,
+      "bit_identical": true,
+      "output_sha256": "06e5cc9f8f41557529ccb5d25e21cab9b20a920551856a3bc9c2b7268eda8ef0"
+    },
+    {
+      "rank": 1,
+      "images": 1,
+      "cache": "cold",
+      "before_ms": 10.460794925689697,
+      "after_ms": 13.629374504089355,
+      "change_percent": 30.290045841719326,
+      "bit_identical": true,
+      "output_sha256": "f2cb2e6d82e0f73bf2e20c32777ca188d4b190d48b758788b0ef8bb63529a9cb"
+    },
+    {
+      "rank": 1,
+      "images": 1,
+      "cache": "hot",
+      "before_ms": 0.5439678132534027,
+      "after_ms": 0.5477871894836426,
+      "change_percent": 0.7021327617523276,
+      "bit_identical": true,
+      "output_sha256": "f2cb2e6d82e0f73bf2e20c32777ca188d4b190d48b758788b0ef8bb63529a9cb"
+    },
+    {
+      "rank": 1,
+      "images": 10,
+      "cache": "cold",
+      "before_ms": 47.66865158081055,
+      "after_ms": 47.49810028076172,
+      "change_percent": -0.35778503144713314,
+      "bit_identical": true,
+      "output_sha256": "d14cd1ec31ba95311dae75e2195e53dbbbc4cb8c799ca1887248870f6975d6e2"
+    },
+    {
+      "rank": 1,
+      "images": 10,
+      "cache": "hot",
+      "before_ms": 0.5367831289768219,
+      "after_ms": 0.43197302520275116,
+      "change_percent": -19.52559574177608,
+      "bit_identical": true,
+      "output_sha256": "d14cd1ec31ba95311dae75e2195e53dbbbc4cb8c799ca1887248870f6975d6e2"
+    },
+    {
+      "rank": 1,
+      "images": 20,
+      "cache": "cold",
+      "before_ms": 93.6811752319336,
+      "after_ms": 93.52848815917969,
+      "change_percent": -0.16298586388981962,
+      "bit_identical": true,
+      "output_sha256": "06e5cc9f8f41557529ccb5d25e21cab9b20a920551856a3bc9c2b7268eda8ef0"
+    },
+    {
+      "rank": 1,
+      "images": 20,
+      "cache": "hot",
+      "before_ms": 0.6627175211906433,
+      "after_ms": 0.5385693907737732,
+      "change_percent": -18.733189699560782,
+      "bit_identical": true,
+      "output_sha256": "06e5cc9f8f41557529ccb5d25e21cab9b20a920551856a3bc9c2b7268eda8ef0"
+    }
+  ]
+}

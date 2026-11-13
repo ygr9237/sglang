@@ -1,0 +1,18 @@
+[
+  {
+    "mode": "incremental",
+    "base": "5a6684f877e3a3759e9049342bf9af5bf46a2638",
+    "before_tree": "ea72a364088501117ed116d0650001c50487a67b",
+    "after_tree": "42cf0b246dd41bb0b3461337f1d323612d25bc17",
+    "reverse_restored": true,
+    "patch_sha256": "122dcdefc3c3d6cef93e3a030436d9c2e41d3cc454f3eaed82737c2f2cdb35a4"
+  },
+  {
+    "mode": "combined",
+    "base": "704681229f1cdda291dbd2261dabb2ae80a4a49d",
+    "before_tree": "1e9b44a857e2b4ea0f5b65b2154536ab54c3adad",
+    "after_tree": "42cf0b246dd41bb0b3461337f1d323612d25bc17",
+    "reverse_restored": true,
+    "patch_sha256": "cfc189298bee3389188f4115156a480f9f620183253b2187a0727e7a823d314b"
+  }
+]

@@ -1,0 +1,6 @@
+{
+  "gpu_state": "0, NVIDIA B300 SXM6 AC, 0, 0\n1, NVIDIA B300 SXM6 AC, 0, 0\n2, NVIDIA B300 SXM6 AC, 0, 0\n3, NVIDIA B300 SXM6 AC, 0, 0\n4, NVIDIA B300 SXM6 AC, 0, 0\n5, NVIDIA B300 SXM6 AC, 0, 0\n6, NVIDIA B300 SXM6 AC, 0, 0\n7, NVIDIA B300 SXM6 AC, 0, 0\n",
+  "task_steps_complete": true,
+  "deployment_restarted": false,
+  "source_status": " M python/sglang/srt/multimodal/mm_utils.py\n M test/registered/unit/multimodal/test_kimi_k3_image_dp_consensus.py\n M test/registered/unit/multimodal/test_kimi_k3_pcp_vision_dp.py\n"
+}

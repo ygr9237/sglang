@@ -1,0 +1,5 @@
+{
+  "python/sglang/srt/multimodal/mm_utils.py": "4436feca788b3930ccf6834d5b7a9299d97734c9d1b1bb3c28f21201221bd69b",
+  "test/registered/unit/multimodal/test_kimi_k3_image_dp_consensus.py": "3bc2cc340f9d1666eb4b5aedcbdc38fe34b0d95aab4a00cd26f425c66b9b992f",
+  "test/registered/unit/multimodal/test_kimi_k3_pcp_vision_dp.py": "d1f10ea21c9a928c9b8b65a4b55544bbb2840adc9635743df610f19032960c09"
+}

@@ -1,0 +1,242 @@
+{
+  "candidate-hashes.json": {
+    "bytes": 397,
+    "sha256": "d6de830f7c695ddc0a539cffad93c3d30726443800f711678f4bb73414292b88"
+  },
+  "candidate.patch": {
+    "bytes": 20055,
+    "sha256": "122dcdefc3c3d6cef93e3a030436d9c2e41d3cc454f3eaed82737c2f2cdb35a4"
+  },
+  "complete-candidate-main.patch": {
+    "bytes": 55419,
+    "sha256": "cfc189298bee3389188f4115156a480f9f620183253b2187a0727e7a823d314b"
+  },
+  "coverage.ini": {
+    "bytes": 267,
+    "sha256": "37ead7f6ce55f2e134387d0d688a8d003bdc0c5970a6634b0b3db4237006a42e"
+  },
+  "gpu_bench.py": {
+    "bytes": 6360,
+    "sha256": "6c133bcfa3dc6369ad370a7e26020c830e9bca3785abf13fe8c80c2141ac133a"
+  },
+  "package-check.json": {
+    "bytes": 686,
+    "sha256": "334e4a74b5927e8677e1c616c45fa6acbb22b173836d59cd69778420b6bb253f"
+  },
+  "paired_bench.py": {
+    "bytes": 3138,
+    "sha256": "b5f941df1e84298c366354ed01811ab881ab253585d94412328d666df5b5ce53"
+  },
+  "paired_runner.py": {
+    "bytes": 2397,
+    "sha256": "11713ff685b56c6a96dea5039e46afab48259cbea3706cef7d2efbb572f471ce"
+  },
+  "post_gpu.py": {
+    "bytes": 2677,
+    "sha256": "b5f2e1575bca8665da8b2b7d2764df1b2e0818abf68a1678f05d3ebcf0d61497"
+  },
+  "server-evidence.tar.gz": {
+    "bytes": 574943,
+    "sha256": "c529fce2aece54645e32004918b3efbb533ba13a8b7614fa1c050ab3dad8dd34"
+  },
+  "summary.json": {
+    "bytes": 6232,
+    "sha256": "9940c15e598ebc2f95040e5caed839466759bbc2fc6443e2a503a08eebc219ee"
+  },
+  "validate.py": {
+    "bytes": 5458,
+    "sha256": "6e29b6fcc57eac07cf8ed31462aa6811765ed5852b5358f16fbefa91fb52a9f7"
+  },
+  "测试记录.md": {
+    "bytes": 4950,
+    "sha256": "bc90ea14c5095b13b0775731bb58bd78fcb99355127a544794f02e624d0a1740"
+  },
+  "results/.coverage": {
+    "bytes": 425984,
+    "sha256": "ed7113675677ea5b9b8e8b916b8851a6bd6e22052f436b7b1bb2a04af8e1e7ec"
+  },
+  "results/after-gpu-rank0.json": {
+    "bytes": 3482,
+    "sha256": "db629683fd8df4de4462231169d0902030799cb21d0515249aa0c227479ef32f"
+  },
+  "results/after-gpu-rank1.json": {
+    "bytes": 3482,
+    "sha256": "ac2f8d2f4372602e12241755de2b0ed15cc711d19c5d1a7843f5a1eabddf5151"
+  },
+  "results/apply-check.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "results/apply.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "results/before-gpu-rank0.json": {
+    "bytes": 3253,
+    "sha256": "25c92fc1d6e9b5b6f2385bf9a340521faac7f2e01ffcffedcb8da51d463371ca"
+  },
+  "results/before-gpu-rank1.json": {
+    "bytes": 3253,
+    "sha256": "58c760eb4c385ca936709fc7aa2db0a1ac784c571d5ca01fd334a4f5322d02e5"
+  },
+  "results/checkout.log": {
+    "bytes": 52,
+    "sha256": "e77590e04c600bcb69fecef0ceecc7d146888f0d4e33f6980c2b6dc71a10c835"
+  },
+  "results/cleanup.json": {
+    "bytes": 531,
+    "sha256": "4e588e8e6494adbc18b9ded5b13093a6ff4460bdd25c71592f6d635f96673909"
+  },
+  "results/clone.log": {
+    "bytes": 77,
+    "sha256": "8b75351667decff2356fda10f996d1c6061ede09569a759fe39107017397956c"
+  },
+  "results/consensus.log": {
+    "bytes": 731,
+    "sha256": "218f5af1f66b5e99b469d25ddad780058dc105d282631ae144c0b029f540612f"
+  },
+  "results/coverage-after-gpu-rank0.json": {
+    "bytes": 3481,
+    "sha256": "3cebcf3d81a072c952874acc865d2497551df03b7dda003770f54b31a416ff69"
+  },
+  "results/coverage-after-gpu-rank1.json": {
+    "bytes": 3482,
+    "sha256": "37c2c01e465a4bf0077f6cd2141cfc1d47c77b219b31c362729f029168c0432d"
+  },
+  "results/coverage-combine.log": {
+    "bytes": 17,
+    "sha256": "692e83e649223740c6119dc5f19dc6a72d9a8b3c846db4b12839acc92ef7ce1c"
+  },
+  "results/coverage-xml.log": {
+    "bytes": 93,
+    "sha256": "4ba017a2dfde03a2326d20d1b790f5692aaefadd8f7c9595d997bf1959ad9943"
+  },
+  "results/coverage.xml": {
+    "bytes": 5714251,
+    "sha256": "45b658eca3bc0cab6be277b318669f4a4ae2f3b4d0d000d2cb3714776729d938"
+  },
+  "results/cpu-coverage.log": {
+    "bytes": 13723,
+    "sha256": "8a8fdce5f76de34bd85b2125bb5eadeade360299f85d9057a7d10f576b98e427"
+  },
+  "results/diff-check.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "results/environment.log": {
+    "bytes": 119,
+    "sha256": "f1d072fe6f3ee5704b1166613610e3ebbec40be6dcf86a052fda78a431cb2547"
+  },
+  "results/fetch-attempt-status.json": {
+    "bytes": 848,
+    "sha256": "5c4126c086d4cc971ac241975ca02e22f0a6a0785da10819c786e2f0875074c4"
+  },
+  "results/fetch-pr.log": {
+    "bytes": 155,
+    "sha256": "6f24988432ec3bd74c28d24cbbe54b5ff17f3079eb2b6b7ca6c89d88f59447a2"
+  },
+  "results/final-status.log": {
+    "bytes": 179,
+    "sha256": "ac41cb7098e67ea31e1c7d398f8e4cac24bfbffc9415a959f74f5d14191cbb8e"
+  },
+  "results/fix-diff-coverage.json": {
+    "bytes": 371,
+    "sha256": "a8d62d6760494de486eefcd49839ead99235600044314f06621df64db6bedd04"
+  },
+  "results/fix-diff-coverage.log": {
+    "bytes": 499,
+    "sha256": "7b51dbf04017eaafd29c8a4e2a40b08eccf119f9da2ef598606d7bcae0beda7c"
+  },
+  "results/gpu-after-uninstrumented.log": {
+    "bytes": 5395,
+    "sha256": "b29e8b054d90d43baeba9a373fe7ee54ba277bf3a35f730c2c88498c54adaff6"
+  },
+  "results/gpu-after.log": {
+    "bytes": 5395,
+    "sha256": "c6b120375d3fcb7068736af79a1c1831027e60d5b1c9285d595b199d08499fc9"
+  },
+  "results/gpu-before.log": {
+    "bytes": 6211,
+    "sha256": "44967bbb670f69a625637f5114876bf4bda2ffa1364dceb0491568ed4d00f154"
+  },
+  "results/gpu-uninstrumented-status.json": {
+    "bytes": 4241,
+    "sha256": "ca45704c182b517b2eaf6c4ff9aa0a9201b32a1b20c6da8ffa06738a828a2ec8"
+  },
+  "results/hardware.json": {
+    "bytes": 454,
+    "sha256": "5fd85c2fa0b911b9081a1c6a45ff15b8fe0029bfc231b5e8c6371f533d3f0ba0"
+  },
+  "results/negative-control.log": {
+    "bytes": 5450,
+    "sha256": "caf26e78365c6de3b3e99f18390b186ac07e31c6c2d66b735234fac587d56298"
+  },
+  "results/ownership.log": {
+    "bytes": 1100,
+    "sha256": "5628d9e160cd933da4a4b8d8a8b6f879d1a0421e242928f38c271d572c2017ca"
+  },
+  "results/paired-gpu-rank0.json": {
+    "bytes": 44281,
+    "sha256": "860a00ef618200d5b2e88240dbb2ebf3df7e977001f0b17edad7c1e40a32c093"
+  },
+  "results/paired-gpu-rank1.json": {
+    "bytes": 44281,
+    "sha256": "f395dee888e586eccd48c176cb4b19c9e84f2b38315e33702468a0894bed27f5"
+  },
+  "results/paired-gpu.log": {
+    "bytes": 32640,
+    "sha256": "548aa93a9b93ccd9fd0fe689a6d50ffb4511f1e4af40840ba73b28f31f2d91e7"
+  },
+  "results/paired-status.json": {
+    "bytes": 4447,
+    "sha256": "b5ef70cf695fbd5853bbd3cc8d84cc0f14a71551ee49706ecbb2c57676cf1eb7"
+  },
+  "results/pr-diff-coverage.json": {
+    "bytes": 1960,
+    "sha256": "7c3c4b2ca717c286c8537b7f4960954778e2821813b0d5917ecb3c1f5bd8cda3"
+  },
+  "results/pr-diff-coverage.log": {
+    "bytes": 766,
+    "sha256": "af0277e06db8c6816bae970852e6864fcb559faba37d866cdec4ea984bb7fce7"
+  },
+  "results/precommit-all-files.log": {
+    "bytes": 4370,
+    "sha256": "858053c885db4cc863ace5e094a93e4b3264f5cd41bbfca5c1846ea537f53341"
+  },
+  "results/source-hashes.json": {
+    "bytes": 740,
+    "sha256": "7a884cc9d85044159a7803f9ec5ebe3d51b8430568cf7634fb83aeb51b2ccd73"
+  },
+  "results/status.json": {
+    "bytes": 7723,
+    "sha256": "48bbc5c491c49af933e163f7b8a3f94d9211d00a80f605c323683e230a58172a"
+  },
+  "source-after/test/registered/unit/multimodal/test_kimi_k3_image_dp_consensus.py": {
+    "bytes": 10899,
+    "sha256": "3bc2cc340f9d1666eb4b5aedcbdc38fe34b0d95aab4a00cd26f425c66b9b992f"
+  },
+  "source-after/test/registered/unit/multimodal/test_kimi_k3_pcp_vision_dp.py": {
+    "bytes": 8051,
+    "sha256": "d1f10ea21c9a928c9b8b65a4b55544bbb2840adc9635743df610f19032960c09"
+  },
+  "source-after/python/sglang/srt/managers/mm_schedule.py": {
+    "bytes": 36029,
+    "sha256": "a125852432300a04c2672017dcc2eeda833f640793c9451f69d6fb82b8319aff"
+  },
+  "source-after/python/sglang/srt/models/kimi_k3.py": {
+    "bytes": 188601,
+    "sha256": "1c006da26f2f6560ae5261866ea3017b11853242a1ff424435fbec74b06c3ef7"
+  },
+  "source-after/python/sglang/srt/multimodal/image_dp_consensus.py": {
+    "bytes": 3776,
+    "sha256": "fd64f30ae112d5398337ec26235a8737de3536fc8b0e095b12f40702dec846ac"
+  },
+  "source-after/python/sglang/srt/multimodal/mm_utils.py": {
+    "bytes": 36829,
+    "sha256": "4436feca788b3930ccf6834d5b7a9299d97734c9d1b1bb3c28f21201221bd69b"
+  },
+  "README.md": {
+    "bytes": 1747,
+    "sha256": "49553d8ec67a569d1356b0aebde1ee061d5401464a1070b6504c60caa4d665c4"
+  }
+}
