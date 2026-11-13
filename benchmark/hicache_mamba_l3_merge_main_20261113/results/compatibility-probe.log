@@ -1,0 +1,3 @@
+/tmp/codex-sglang-pr5-20261112-run/pr49518-conflict-20261113/source/python/sglang/srt/layers/quantization/awq/awq.py:53: UserWarning: Only CUDA, HIP and XPU support AWQ currently.
+  warnings.warn(f"Only CUDA, HIP and XPU support AWQ currently.")
+{"checkpoint_deferred": true, "storage_prompt_boundary": true, "checkpoint_length": 0, "serialization_retains_both_flags": true}

@@ -1,0 +1,96 @@
+﻿2026-11-13T10:11:08.0596694Z Current runner version: '2.338.2'
+2026-11-13T10:11:08.0617500Z ##[group]Runner Image Provisioner
+2026-11-13T10:11:08.0618280Z Hosted Compute Agent
+2026-11-13T10:11:08.0618806Z Version: 20261028.624
+2026-11-13T10:11:08.0619401Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+2026-11-13T10:11:08.0619986Z Build Date: 2026-10-28T21:51:42Z
+2026-11-13T10:11:08.0620526Z Worker ID: {0f3c4c1e-5073-4629-9310-64bfb1868f91}
+2026-11-13T10:11:08.0621144Z Region: westus3
+2026-11-13T10:11:08.0621626Z Cloud: Azure
+2026-11-13T10:11:08.0622098Z ##[endgroup]
+2026-11-13T10:11:08.0623142Z ##[group]Operating System
+2026-11-13T10:11:08.0623646Z Ubuntu
+2026-11-13T10:11:08.0624124Z 26.04.1
+2026-11-13T10:11:08.0624785Z LTS
+2026-11-13T10:11:08.0625563Z ##[endgroup]
+2026-11-13T10:11:08.0626027Z ##[group]Runner Image
+2026-11-13T10:11:08.0626539Z Image: ubuntu-26.04
+2026-11-13T10:11:08.0627040Z Version: 20261101.186.1
+2026-11-13T10:11:08.0628098Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261101.186/images/ubuntu/Ubuntu2604-Readme.md
+2026-11-13T10:11:08.0629331Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261101.186
+2026-11-13T10:11:08.0630127Z ##[endgroup]
+2026-11-13T10:11:08.0631235Z ##[group]GITHUB_TOKEN Permissions
+2026-11-13T10:11:08.0633007Z Actions: read
+2026-11-13T10:11:08.0633555Z Contents: read
+2026-11-13T10:11:08.0634014Z Metadata: read
+2026-11-13T10:11:08.0634696Z PullRequests: read
+2026-11-13T10:11:08.0635288Z ##[endgroup]
+2026-11-13T10:11:08.0637013Z Secret source: Actions
+2026-11-13T10:11:08.0637853Z Cache mode: read
+2026-11-13T10:11:08.0638592Z Prepare workflow directory
+2026-11-13T10:11:08.1100918Z Prepare all required actions
+2026-11-13T10:11:08.1141412Z Getting action download info
+2026-11-13T10:11:08.3802221Z Download action repository 'actions/github-script@v8' (SHA:ed597411d8f924073f98dfc5c65a23a2325f34cd)
+2026-11-13T10:11:09.0275764Z Uses: sgl-project/sglang/.github/workflows/pr-gate.yml@refs/heads/main (5792cf6e5e11aebc62d41cf19828f615a8fa7e0a)
+2026-11-13T10:11:09.0279310Z ##[group] Inputs
+2026-11-13T10:11:09.0280042Z   require-run-ci: true
+2026-11-13T10:11:09.0280484Z   require-label: run-ci-mlu
+2026-11-13T10:11:09.0282162Z   cool-down-minutes: 120
+2026-11-13T10:11:09.0282617Z ##[endgroup]
+2026-11-13T10:11:09.0283018Z Complete job name: call-gate / pr-gate
+2026-11-13T10:11:09.1016614Z ##[group]Run actions/github-script@v8
+2026-11-13T10:11:09.1017349Z with:
+2026-11-13T10:11:09.1020487Z   github-token: ***
+2026-11-13T10:11:09.1021960Z   script: const pr = await github.rest.pulls.get({
+  owner: context.repo.owner,
+  repo: context.repo.repo,
+  pull_number: context.issue.number
+});
+core.setOutput("labels", JSON.stringify(pr.data.labels.map(l => l.name)));
+core.setOutput("draft", pr.data.draft);
+core.setOutput("user", pr.data.user.login);
+
+2026-11-13T10:11:09.1023488Z   debug: false
+2026-11-13T10:11:09.1023868Z   user-agent: actions/github-script
+2026-11-13T10:11:09.1024309Z   result-encoding: json
+2026-11-13T10:11:09.1024837Z   retries: 0
+2026-11-13T10:11:09.1025273Z   retry-exempt-status-codes: 400,401,403,404,422
+2026-11-13T10:11:09.1025917Z env:
+2026-11-13T10:11:09.1026258Z   IS_PR_EVENT: true
+2026-11-13T10:11:09.1026628Z ##[endgroup]
+2026-11-13T10:11:10.4941040Z ##[group]Run echo "===== PR Info ====="
+2026-11-13T10:11:10.4942274Z [36;1mecho "===== PR Info ====="[0m
+2026-11-13T10:11:10.4943414Z [36;1mecho "PR Event: pull_request_target"[0m
+2026-11-13T10:11:10.4945114Z [36;1mecho "PR Labels: ["documentation","hicache","unified-radix-cache"]"[0m
+2026-11-13T10:11:10.4946643Z [36;1mecho "PR Draft: false"[0m
+2026-11-13T10:11:10.4947677Z [36;1mecho "PR User: ygr9237"[0m
+2026-11-13T10:11:10.4948706Z [36;1mecho "Require run-ci: true"[0m
+2026-11-13T10:11:10.4949777Z [36;1mecho "Require label: run-ci-mlu"[0m
+2026-11-13T10:11:10.4950882Z [36;1mecho "Cool down minutes: 120"[0m
+2026-11-13T10:11:10.4951919Z [36;1mecho "==================="[0m
+2026-11-13T10:11:10.5003198Z shell: /usr/bin/bash -e {0}
+2026-11-13T10:11:10.5004166Z env:
+2026-11-13T10:11:10.5005358Z   IS_PR_EVENT: true
+2026-11-13T10:11:10.5006183Z ##[endgroup]
+2026-11-13T10:11:10.5109923Z ===== PR Info =====
+2026-11-13T10:11:10.5110960Z PR Event: pull_request_target
+2026-11-13T10:11:10.5112285Z PR Labels: [documentation,hicache,unified-radix-cache]
+2026-11-13T10:11:10.5113666Z PR Draft: false
+2026-11-13T10:11:10.5114734Z PR User: ygr9237
+2026-11-13T10:11:10.5115610Z Require run-ci: true
+2026-11-13T10:11:10.5116543Z Require label: run-ci-mlu
+2026-11-13T10:11:10.5117531Z Cool down minutes: 120
+2026-11-13T10:11:10.5118440Z ===================
+2026-11-13T10:11:10.5248221Z ##[group]Run labels='["documentation","hicache","unified-radix-cache"]'
+2026-11-13T10:11:10.5249913Z [36;1mlabels='["documentation","hicache","unified-radix-cache"]'[0m
+2026-11-13T10:11:10.5251285Z [36;1mif [[ "false" == "false" ]]; then[0m
+2026-11-13T10:11:10.5253662Z [36;1m  echo "Missing required label 'run-ci'. See https://docs.sglang.io/developer_guide/contribution_guide.html#how-to-trigger-ci-tests for more details."[0m
+2026-11-13T10:11:10.5256232Z [36;1m  exit 1[0m
+2026-11-13T10:11:10.5257005Z [36;1mfi[0m
+2026-11-13T10:11:10.5303705Z shell: /usr/bin/bash -e {0}
+2026-11-13T10:11:10.5304700Z env:
+2026-11-13T10:11:10.5305430Z   IS_PR_EVENT: true
+2026-11-13T10:11:10.5306221Z ##[endgroup]
+2026-11-13T10:11:10.5378381Z Missing required label 'run-ci'. See https://docs.sglang.io/developer_guide/contribution_guide.html#how-to-trigger-ci-tests for more details.
+2026-11-13T10:11:10.5388644Z ##[error]Process completed with exit code 1.
+2026-11-13T10:11:10.5522954Z Cleaning up orphan processes

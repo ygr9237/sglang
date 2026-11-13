@@ -1,0 +1,91 @@
+Unsupported element_size = 32 for JIT HiCache kernel
+Unsupported element_size = 16 for JIT HiCache kernel
+Unsupported element_size = 32 for JIT HiCache kernel
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I20261113 19:21:00.314510 109353 client_metric.cpp:102] Client metrics enabled (default enabled)
+I20261113 19:21:00.314563 109353 client_metric.cpp:103] Client bandwidth summary enabled via MC_STORE_CLIENT_METRIC_BANDWIDTH
+I20261113 19:21:00.317044 109353 client_service.cpp:423] client_id=1532228891689885832-8592665082599486107
+I20261113 19:21:00.317066 109353 client_service.cpp:437] Client metrics enabled but reporting disabled (interval=0)
+I20261113 19:21:00.319401 109353 client_service.cpp:1077] Storage root directory is not set. persisting data is disabled.
+I20261113 19:21:00.319478 109353 transfer_engine_impl.cpp:1046] Metrics reporting is disabled (set MC_TE_METRIC=1 to enable)
+I20261113 19:21:00.319504 109353 transfer_engine_impl.cpp:116] Transfer Engine parseHostNameWithPort. server_name: 127.0.0.1 port: 13975
+I20261113 19:21:00.319533 109353 transfer_engine_impl.cpp:183] Transfer Engine RPC using P2P handshake, listening on 127.0.0.1:16033
+I20261113 19:21:00.319655 109353 client_service.cpp:872] Transfer engine auto discovery is disabled for protocol: tcp
+E20261113 19:21:00.319715 109353 transfer_metadata.cpp:1098] Local segment descriptor not found
+I20261113 19:21:00.319753 109353 tcp_transport.cpp:391] TcpTransport: listen on port 16570
+I20261113 19:21:00.320700 109353 transfer_task.cpp:965] MC_STORE_MEMCPY not set, auto-detected: TCP-only environment, memcpy enabled
+I20261113 19:21:00.320715 109353 real_client.cpp:852] Successfully created client on port 13975 after 1 attempt(s)
+I20261113 19:21:00.323191 109353 real_client.cpp:885] Registering local memory: 16777216 bytes
+I20261113 19:21:00.323297 109353 real_client.cpp:1027] Mounting segment: 134217728 bytes, 134217728 of 134217728
+I20261113 19:21:00.323323 109353 registered_pinned_memory.cpp:98] Store segment pinned memory is disabled, max_bytes=0
+Removing stale PyTorch extension lock for hicache_hash_cpp at /tmp/codex-sglang-pr5-20261112-run/pr49518-conflict-20261113/torch_extensions/hicache_hash_cpp/lock
+{"backend": "python", "interval": 0, "selected_tokens": [8192, 16384, 24576, 32768, 40960, 49152, 57344, 65536, 73728], "kv_pages": 1152, "physical_objects_written": 2349, "checks": [{"target": 73728, "hit_tokens": 73728, "tensors_bitwise_equal": true, "kda_output_and_state_bitwise_equal": true}, {"target": 57344, "hit_tokens": 57344, "tensors_bitwise_equal": true, "kda_output_and_state_bitwise_equal": true}, {"target": 24576, "hit_tokens": 24576, "tensors_bitwise_equal": true, "kda_output_and_state_bitwise_equal": true}], "missing_state_fallback_tokens": 65536, "missing_state_sidecar_fallback_tokens": 57344, "missing_draft_rejected": true}
+I20261113 19:21:14.333268 109353 transfer_metadata.cpp:616] removeSegmentDesc 127.0.0.1:16033 finish
+Unsupported element_size = 32 for JIT HiCache kernel
+Unsupported element_size = 16 for JIT HiCache kernel
+Unsupported element_size = 32 for JIT HiCache kernel
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I20261113 19:21:28.539635 109465 client_metric.cpp:102] Client metrics enabled (default enabled)
+I20261113 19:21:28.539695 109465 client_metric.cpp:103] Client bandwidth summary enabled via MC_STORE_CLIENT_METRIC_BANDWIDTH
+I20261113 19:21:28.541998 109465 client_service.cpp:423] client_id=11116135096036793032-16337367911562857352
+I20261113 19:21:28.542017 109465 client_service.cpp:437] Client metrics enabled but reporting disabled (interval=0)
+I20261113 19:21:28.545819 109465 client_service.cpp:1077] Storage root directory is not set. persisting data is disabled.
+I20261113 19:21:28.545886 109465 transfer_engine_impl.cpp:1046] Metrics reporting is disabled (set MC_TE_METRIC=1 to enable)
+I20261113 19:21:28.545913 109465 transfer_engine_impl.cpp:116] Transfer Engine parseHostNameWithPort. server_name: 127.0.0.1 port: 12967
+I20261113 19:21:28.545938 109465 transfer_engine_impl.cpp:183] Transfer Engine RPC using P2P handshake, listening on 127.0.0.1:16419
+I20261113 19:21:28.546113 109465 client_service.cpp:872] Transfer engine auto discovery is disabled for protocol: tcp
+E20261113 19:21:28.546172 109465 transfer_metadata.cpp:1098] Local segment descriptor not found
+I20261113 19:21:28.546211 109465 tcp_transport.cpp:391] TcpTransport: listen on port 15010
+I20261113 19:21:28.547341 109465 transfer_task.cpp:965] MC_STORE_MEMCPY not set, auto-detected: TCP-only environment, memcpy enabled
+I20261113 19:21:28.547354 109465 real_client.cpp:852] Successfully created client on port 12967 after 1 attempt(s)
+I20261113 19:21:28.549625 109465 real_client.cpp:885] Registering local memory: 16777216 bytes
+I20261113 19:21:28.549712 109465 real_client.cpp:1027] Mounting segment: 134217728 bytes, 134217728 of 134217728
+I20261113 19:21:28.549736 109465 registered_pinned_memory.cpp:98] Store segment pinned memory is disabled, max_bytes=0
+Removing stale PyTorch extension lock for hicache_hash_cpp at /tmp/codex-sglang-pr5-20261112-run/pr49518-conflict-20261113/torch_extensions/hicache_hash_cpp/lock
+{"backend": "python", "interval": 32768, "selected_tokens": [32768, 65536, 73728], "kv_pages": 1152, "physical_objects_written": 2319, "checks": [{"target": 73728, "hit_tokens": 73728, "tensors_bitwise_equal": true, "kda_output_and_state_bitwise_equal": true}, {"target": 57344, "hit_tokens": 32768, "tensors_bitwise_equal": true, "kda_output_and_state_bitwise_equal": true}, {"target": 24576, "hit_tokens": 0}], "missing_state_fallback_tokens": 65536, "missing_state_sidecar_fallback_tokens": 32768, "missing_draft_rejected": true}
+I20261113 19:21:31.555176 109465 transfer_metadata.cpp:616] removeSegmentDesc 127.0.0.1:16419 finish
+Unsupported element_size = 32 for JIT HiCache kernel
+Unsupported element_size = 16 for JIT HiCache kernel
+Unsupported element_size = 32 for JIT HiCache kernel
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I20261113 19:21:45.509321 109584 client_metric.cpp:102] Client metrics enabled (default enabled)
+I20261113 19:21:45.509359 109584 client_metric.cpp:103] Client bandwidth summary enabled via MC_STORE_CLIENT_METRIC_BANDWIDTH
+I20261113 19:21:45.511262 109584 client_service.cpp:423] client_id=14359578702002473712-11599526686130521501
+I20261113 19:21:45.511277 109584 client_service.cpp:437] Client metrics enabled but reporting disabled (interval=0)
+I20261113 19:21:45.513630 109584 client_service.cpp:1077] Storage root directory is not set. persisting data is disabled.
+I20261113 19:21:45.513720 109584 transfer_engine_impl.cpp:1046] Metrics reporting is disabled (set MC_TE_METRIC=1 to enable)
+I20261113 19:21:45.513739 109584 transfer_engine_impl.cpp:116] Transfer Engine parseHostNameWithPort. server_name: 127.0.0.1 port: 13317
+I20261113 19:21:45.513760 109584 transfer_engine_impl.cpp:183] Transfer Engine RPC using P2P handshake, listening on 127.0.0.1:15242
+I20261113 19:21:45.513860 109584 client_service.cpp:872] Transfer engine auto discovery is disabled for protocol: tcp
+E20261113 19:21:45.513911 109584 transfer_metadata.cpp:1098] Local segment descriptor not found
+I20261113 19:21:45.513947 109584 tcp_transport.cpp:391] TcpTransport: listen on port 16525
+I20261113 19:21:45.514657 109584 transfer_task.cpp:965] MC_STORE_MEMCPY not set, auto-detected: TCP-only environment, memcpy enabled
+I20261113 19:21:45.514667 109584 real_client.cpp:852] Successfully created client on port 13317 after 1 attempt(s)
+I20261113 19:21:45.516495 109584 real_client.cpp:885] Registering local memory: 16777216 bytes
+I20261113 19:21:45.516568 109584 real_client.cpp:1027] Mounting segment: 134217728 bytes, 134217728 of 134217728
+I20261113 19:21:45.516588 109584 registered_pinned_memory.cpp:98] Store segment pinned memory is disabled, max_bytes=0
+{"backend": "rust", "interval": 0, "selected_tokens": [8192, 16384, 24576, 32768, 40960, 49152, 57344, 65536, 73728], "kv_pages": 1152, "physical_objects_written": 2349, "checks": [{"target": 73728, "hit_tokens": 73728, "tensors_bitwise_equal": true, "kda_output_and_state_bitwise_equal": true}, {"target": 57344, "hit_tokens": 57344, "tensors_bitwise_equal": true, "kda_output_and_state_bitwise_equal": true}, {"target": 24576, "hit_tokens": 24576, "tensors_bitwise_equal": true, "kda_output_and_state_bitwise_equal": true}], "missing_state_fallback_tokens": 65536, "missing_state_sidecar_fallback_tokens": 57344, "missing_draft_rejected": true}
+I20261113 19:21:48.521178 109584 transfer_metadata.cpp:616] removeSegmentDesc 127.0.0.1:15242 finish
+Unsupported element_size = 32 for JIT HiCache kernel
+Unsupported element_size = 16 for JIT HiCache kernel
+Unsupported element_size = 32 for JIT HiCache kernel
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I20261113 19:22:03.959410 109693 client_metric.cpp:102] Client metrics enabled (default enabled)
+I20261113 19:22:03.959460 109693 client_metric.cpp:103] Client bandwidth summary enabled via MC_STORE_CLIENT_METRIC_BANDWIDTH
+I20261113 19:22:03.961087 109693 client_service.cpp:423] client_id=17458188394990143750-5448959643089034896
+I20261113 19:22:03.961100 109693 client_service.cpp:437] Client metrics enabled but reporting disabled (interval=0)
+I20261113 19:22:03.964094 109693 client_service.cpp:1077] Storage root directory is not set. persisting data is disabled.
+I20261113 19:22:03.964176 109693 transfer_engine_impl.cpp:1046] Metrics reporting is disabled (set MC_TE_METRIC=1 to enable)
+I20261113 19:22:03.964196 109693 transfer_engine_impl.cpp:116] Transfer Engine parseHostNameWithPort. server_name: 127.0.0.1 port: 12547
+I20261113 19:22:03.964215 109693 transfer_engine_impl.cpp:183] Transfer Engine RPC using P2P handshake, listening on 127.0.0.1:15602
+I20261113 19:22:03.964298 109693 client_service.cpp:872] Transfer engine auto discovery is disabled for protocol: tcp
+E20261113 19:22:03.964340 109693 transfer_metadata.cpp:1098] Local segment descriptor not found
+I20261113 19:22:03.964366 109693 tcp_transport.cpp:391] TcpTransport: listen on port 15195
+I20261113 19:22:03.965143 109693 transfer_task.cpp:965] MC_STORE_MEMCPY not set, auto-detected: TCP-only environment, memcpy enabled
+I20261113 19:22:03.965157 109693 real_client.cpp:852] Successfully created client on port 12547 after 1 attempt(s)
+I20261113 19:22:03.967084 109693 real_client.cpp:885] Registering local memory: 16777216 bytes
+I20261113 19:22:03.967159 109693 real_client.cpp:1027] Mounting segment: 134217728 bytes, 134217728 of 134217728
+I20261113 19:22:03.967177 109693 registered_pinned_memory.cpp:98] Store segment pinned memory is disabled, max_bytes=0
+{"backend": "rust", "interval": 32768, "selected_tokens": [32768, 65536, 73728], "kv_pages": 1152, "physical_objects_written": 2319, "checks": [{"target": 73728, "hit_tokens": 73728, "tensors_bitwise_equal": true, "kda_output_and_state_bitwise_equal": true}, {"target": 57344, "hit_tokens": 32768, "tensors_bitwise_equal": true, "kda_output_and_state_bitwise_equal": true}, {"target": 24576, "hit_tokens": 0}], "missing_state_fallback_tokens": 65536, "missing_state_sidecar_fallback_tokens": 32768, "missing_draft_rejected": true}
+I20261113 19:22:06.972301 109693 transfer_metadata.cpp:616] removeSegmentDesc 127.0.0.1:15602 finish
+ALL FOUR L3 ROUND TRIPS PASSED

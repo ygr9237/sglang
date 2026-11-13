@@ -1,0 +1,19 @@
+   Compiling syn v2.0.119
+   Compiling pyo3-build-config v0.29.2
+   Compiling torch-sys v0.24.0
+   Compiling tch v0.24.0
+    Checking once_cell v1.21.4
+   Compiling pyo3-ffi v0.29.2
+   Compiling pyo3 v0.29.2
+   Compiling pyo3-macros-backend v0.29.2
+   Compiling zerocopy-derive v0.8.56
+   Compiling thiserror-impl v1.0.69
+    Checking thiserror v1.0.69
+    Checking zerocopy v0.8.56
+   Compiling pyo3-macros v0.29.2
+    Checking ppv-lite86 v0.2.21
+    Checking half v2.7.1
+    Checking rand_chacha v0.3.1
+    Checking rand v0.8.8
+    Checking sglang-radix-tree v0.1.0 (/tmp/codex-sglang-pr5-20261112-run/pr49518-conflict-20261113/source/rust/sglang-radix-tree)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 20.01s

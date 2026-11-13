@@ -1,0 +1,146 @@
+[
+  {
+    "backend": "python",
+    "interval": 0,
+    "selected_tokens": [
+      8192,
+      16384,
+      24576,
+      32768,
+      40960,
+      49152,
+      57344,
+      65536,
+      73728
+    ],
+    "kv_pages": 1152,
+    "physical_objects_written": 2349,
+    "checks": [
+      {
+        "target": 73728,
+        "hit_tokens": 73728,
+        "tensors_bitwise_equal": true,
+        "kda_output_and_state_bitwise_equal": true
+      },
+      {
+        "target": 57344,
+        "hit_tokens": 57344,
+        "tensors_bitwise_equal": true,
+        "kda_output_and_state_bitwise_equal": true
+      },
+      {
+        "target": 24576,
+        "hit_tokens": 24576,
+        "tensors_bitwise_equal": true,
+        "kda_output_and_state_bitwise_equal": true
+      }
+    ],
+    "missing_state_fallback_tokens": 65536,
+    "missing_state_sidecar_fallback_tokens": 57344,
+    "missing_draft_rejected": true
+  },
+  {
+    "backend": "python",
+    "interval": 32768,
+    "selected_tokens": [
+      32768,
+      65536,
+      73728
+    ],
+    "kv_pages": 1152,
+    "physical_objects_written": 2319,
+    "checks": [
+      {
+        "target": 73728,
+        "hit_tokens": 73728,
+        "tensors_bitwise_equal": true,
+        "kda_output_and_state_bitwise_equal": true
+      },
+      {
+        "target": 57344,
+        "hit_tokens": 32768,
+        "tensors_bitwise_equal": true,
+        "kda_output_and_state_bitwise_equal": true
+      },
+      {
+        "target": 24576,
+        "hit_tokens": 0
+      }
+    ],
+    "missing_state_fallback_tokens": 65536,
+    "missing_state_sidecar_fallback_tokens": 32768,
+    "missing_draft_rejected": true
+  },
+  {
+    "backend": "rust",
+    "interval": 0,
+    "selected_tokens": [
+      8192,
+      16384,
+      24576,
+      32768,
+      40960,
+      49152,
+      57344,
+      65536,
+      73728
+    ],
+    "kv_pages": 1152,
+    "physical_objects_written": 2349,
+    "checks": [
+      {
+        "target": 73728,
+        "hit_tokens": 73728,
+        "tensors_bitwise_equal": true,
+        "kda_output_and_state_bitwise_equal": true
+      },
+      {
+        "target": 57344,
+        "hit_tokens": 57344,
+        "tensors_bitwise_equal": true,
+        "kda_output_and_state_bitwise_equal": true
+      },
+      {
+        "target": 24576,
+        "hit_tokens": 24576,
+        "tensors_bitwise_equal": true,
+        "kda_output_and_state_bitwise_equal": true
+      }
+    ],
+    "missing_state_fallback_tokens": 65536,
+    "missing_state_sidecar_fallback_tokens": 57344,
+    "missing_draft_rejected": true
+  },
+  {
+    "backend": "rust",
+    "interval": 32768,
+    "selected_tokens": [
+      32768,
+      65536,
+      73728
+    ],
+    "kv_pages": 1152,
+    "physical_objects_written": 2319,
+    "checks": [
+      {
+        "target": 73728,
+        "hit_tokens": 73728,
+        "tensors_bitwise_equal": true,
+        "kda_output_and_state_bitwise_equal": true
+      },
+      {
+        "target": 57344,
+        "hit_tokens": 32768,
+        "tensors_bitwise_equal": true,
+        "kda_output_and_state_bitwise_equal": true
+      },
+      {
+        "target": 24576,
+        "hit_tokens": 0
+      }
+    ],
+    "missing_state_fallback_tokens": 65536,
+    "missing_state_sidecar_fallback_tokens": 32768,
+    "missing_draft_rejected": true
+  }
+]
