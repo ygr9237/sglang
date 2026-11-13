@@ -1,0 +1,12 @@
+..............................................................................................sssss [100%]
+=============================== warnings summary ===============================
+python/sglang/srt/layers/quantization/awq/awq.py:53
+  /data/pr49518_fix_20261113/source/python/sglang/srt/layers/quantization/awq/awq.py:53: UserWarning: Only CUDA, HIP and XPU support AWQ currently.
+    warnings.warn(f"Only CUDA, HIP and XPU support AWQ currently.")
+
+python/sglang/kernels/ops/attention/fla/utils.py:223
+  /data/pr49518_fix_20261113/source/python/sglang/kernels/ops/attention/fla/utils.py:223: UserWarning: Triton is not supported on current platform, roll back to CPU.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+94 passed, 5 skipped, 529 deselected, 2 warnings, 45 subtests passed in 22.99s

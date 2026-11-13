@@ -1,0 +1,126 @@
+/data/k31_pr4_l3_completion_20261110/source/python/sglang/srt/layers/quantization/awq/awq.py:53: UserWarning: Only CUDA, HIP and XPU support AWQ currently.
+  warnings.warn(f"Only CUDA, HIP and XPU support AWQ currently.")
+{"verified_pr_head_files": 14, "head": "dbf1e025fdd52da542c24ec16cfc127998016c0b"}
+W1113 09:32:38.710000 80986 torch/utils/cpp_extension.py:183] No CUDA runtime is found, using CUDA_HOME='/usr/local/cuda'
+..............................{"backend": "python", "case": "split_pending", "kv_write_lengths": [18, 2], "state_writes": 0}
+F{"backend": "rust", "case": "split_pending", "kv_write_lengths": [18, 2], "state_writes": 0}
+F{"backend": "python", "case": "periodic_promotion", "kv_write_lengths": [16, 16], "write_calls": 2}
+F{"backend": "rust", "case": "periodic_promotion", "kv_write_lengths": [16, 16], "write_calls": 2}
+F
+=================================== FAILURES ===================================
+___ test_pending_periodic_checkpoint_survives_kv_split_and_real_ack[python] ____
+
+backend = 'python'
+
+    @pytest.mark.parametrize('backend',['python','rust'])
+    def test_pending_periodic_checkpoint_survives_kv_split_and_real_ack(backend):
+        cache=_cache(backend,interval=16,page_size=2)
+        node=_insert(cache,20)
+        _backup(cache,node,pending=True)
+        cache.ongoing_write_through={91:(node,None,[node])}
+        assert _has_mamba(cache.tree_core.build_storage_backup_spec(node,False,16))
+        match=cache.tree_core.match_prefix(MatchPrefixParams(key=_key(list(range(18)))))
+        # Apply the real cache's split bookkeeping, then its actual L2 ACK handler.
+        for action in match.cache_actions:
+            if getattr(action,'ack_id',None)==91:
+                cache._replace_pending_write_through_node(
+                    action.ack_id,action.old_node_id,[action.new_node_id,action.new_child_node_id])
+        cache._finish_write_through_ack(91)
+        calls=cache.cache_controller.write_storage.call_args_list
+        assert sum(len(call.args[0]) for call in calls)==20
+        kept=sum(any(x.name==PoolName.MAMBA for x in call.kwargs['extra_pools'] or ()) for call in calls)
+        print(json.dumps({'backend':backend,'case':'split_pending','kv_write_lengths':[len(c.args[0]) for c in calls],'state_writes':kept}),flush=True)
+>       assert kept==1,'KV-only split moved the crossing onto a node with no Mamba state'
+E       AssertionError: KV-only split moved the crossing onto a node with no Mamba state
+E       assert 0 == 1
+
+review_regressions.py:27: AssertionError
+____ test_pending_periodic_checkpoint_survives_kv_split_and_real_ack[rust] _____
+
+backend = 'rust'
+
+    @pytest.mark.parametrize('backend',['python','rust'])
+    def test_pending_periodic_checkpoint_survives_kv_split_and_real_ack(backend):
+        cache=_cache(backend,interval=16,page_size=2)
+        node=_insert(cache,20)
+        _backup(cache,node,pending=True)
+        cache.ongoing_write_through={91:(node,None,[node])}
+        assert _has_mamba(cache.tree_core.build_storage_backup_spec(node,False,16))
+        match=cache.tree_core.match_prefix(MatchPrefixParams(key=_key(list(range(18)))))
+        # Apply the real cache's split bookkeeping, then its actual L2 ACK handler.
+        for action in match.cache_actions:
+            if getattr(action,'ack_id',None)==91:
+                cache._replace_pending_write_through_node(
+                    action.ack_id,action.old_node_id,[action.new_node_id,action.new_child_node_id])
+        cache._finish_write_through_ack(91)
+        calls=cache.cache_controller.write_storage.call_args_list
+        assert sum(len(call.args[0]) for call in calls)==20
+        kept=sum(any(x.name==PoolName.MAMBA for x in call.kwargs['extra_pools'] or ()) for call in calls)
+        print(json.dumps({'backend':backend,'case':'split_pending','kv_write_lengths':[len(c.args[0]) for c in calls],'state_writes':kept}),flush=True)
+>       assert kept==1,'KV-only split moved the crossing onto a node with no Mamba state'
+E       AssertionError: KV-only split moved the crossing onto a node with no Mamba state
+E       assert 0 == 1
+
+review_regressions.py:27: AssertionError
+__ test_promotion_of_already_selected_periodic_node_does_not_rewrite[python] ___
+
+backend = 'python'
+
+    @pytest.mark.parametrize('backend',['python','rust'])
+    def test_promotion_of_already_selected_periodic_node_does_not_rewrite(backend):
+        cache=_cache(backend,interval=16,page_size=2)
+        node=_insert(cache,16)
+        _backup(cache,node)
+        first=_write_and_ack(cache,node)
+        assert any(x.name==PoolName.MAMBA for x in first.kwargs['extra_pools'])
+        assert cache.cache_controller.write_storage.call_count==1
+        _insert(cache,16,slot=2,endpoint=True)
+        calls=cache.cache_controller.write_storage.call_args_list
+        print(json.dumps({'backend':backend,'case':'periodic_promotion','kv_write_lengths':[len(c.args[0]) for c in calls],'write_calls':len(calls)}),flush=True)
+>       assert len(calls)==1,'Periodic checkpoint was already included in the first L3 write'
+E       AssertionError: Periodic checkpoint was already included in the first L3 write
+E       assert 2 == 1
+E        +  where 2 = len([call(tensor([1000, 1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1010, 1011,\n        1012, 1013, 1014, 1015])...tPolicy.TRAILING_PAGES: 'trailing_pages'>, nodes_to_load=None, indices_from_pool=None, block_pages=0, group_pages=0)])])
+
+review_regressions.py:40: AssertionError
+___ test_promotion_of_already_selected_periodic_node_does_not_rewrite[rust] ____
+
+backend = 'rust'
+
+    @pytest.mark.parametrize('backend',['python','rust'])
+    def test_promotion_of_already_selected_periodic_node_does_not_rewrite(backend):
+        cache=_cache(backend,interval=16,page_size=2)
+        node=_insert(cache,16)
+        _backup(cache,node)
+        first=_write_and_ack(cache,node)
+        assert any(x.name==PoolName.MAMBA for x in first.kwargs['extra_pools'])
+        assert cache.cache_controller.write_storage.call_count==1
+        _insert(cache,16,slot=2,endpoint=True)
+        calls=cache.cache_controller.write_storage.call_args_list
+        print(json.dumps({'backend':backend,'case':'periodic_promotion','kv_write_lengths':[len(c.args[0]) for c in calls],'write_calls':len(calls)}),flush=True)
+>       assert len(calls)==1,'Periodic checkpoint was already included in the first L3 write'
+E       AssertionError: Periodic checkpoint was already included in the first L3 write
+E       assert 2 == 1
+E        +  where 2 = len([call(tensor([1000, 1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1010, 1011,\n        1012, 1013, 1014, 1015])...tPolicy.TRAILING_PAGES: 'trailing_pages'>, nodes_to_load=None, indices_from_pool=None, block_pages=0, group_pages=0)])])
+
+review_regressions.py:40: AssertionError
+=============================== warnings summary ===============================
+../../opt/sglang/lib/python3.12/site-packages/_pytest/config/__init__.py:1507
+  /opt/sglang/lib/python3.12/site-packages/_pytest/config/__init__.py:1507: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; anyio
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+../../opt/sglang/lib/python3.12/site-packages/_pytest/config/__init__.py:1507
+  /opt/sglang/lib/python3.12/site-packages/_pytest/config/__init__.py:1507: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; triton
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+../../opt/sglang/lib/python3.12/site-packages/_pytest/config/__init__.py:1507
+  /opt/sglang/lib/python3.12/site-packages/_pytest/config/__init__.py:1507: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; sglang
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../k31_pr4_l3_completion_20261110/source/test::test_pending_periodic_checkpoint_survives_kv_split_and_real_ack[python]
+FAILED ../k31_pr4_l3_completion_20261110/source/test::test_pending_periodic_checkpoint_survives_kv_split_and_real_ack[rust]
+FAILED ../k31_pr4_l3_completion_20261110/source/test::test_promotion_of_already_selected_periodic_node_does_not_rewrite[python]
+FAILED ../k31_pr4_l3_completion_20261110/source/test::test_promotion_of_already_selected_periodic_node_does_not_rewrite[rust]
+4 failed, 30 passed, 3 warnings in 0.94s

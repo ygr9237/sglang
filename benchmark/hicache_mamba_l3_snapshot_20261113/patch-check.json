@@ -1,0 +1,7 @@
+{
+  "forward_check": true,
+  "replay_matches_all_14_files": true,
+  "reverse_check": true,
+  "reverse_restores_base": true,
+  "diff_check": true
+}

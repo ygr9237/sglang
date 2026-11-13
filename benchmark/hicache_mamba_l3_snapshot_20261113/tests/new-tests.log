@@ -1,0 +1,117 @@
+/data/pr49518_fix_20261113/source/python/sglang/srt/layers/quantization/awq/awq.py:53: UserWarning: Only CUDA, HIP and XPU support AWQ currently.
+  warnings.warn(f"Only CUDA, HIP and XPU support AWQ currently.")
+   Compiling libc v0.2.189
+   Compiling version_check v0.9.5
+   Compiling find-msvc-tools v0.1.11
+   Compiling shlex v2.0.1
+   Compiling pkg-config v0.3.34
+   Compiling proc-macro2 v1.0.107
+   Compiling generic-array v0.14.7
+   Compiling unicode-ident v1.0.24
+   Compiling quote v1.0.47
+   Compiling typenum v1.20.1
+   Compiling jobserver v0.1.35
+   Compiling cfg-if v1.0.4
+   Compiling zstd-safe v5.0.2+zstd.1.5.2
+   Compiling cc v1.4.4
+   Compiling crc32fast v1.5.1
+   Compiling syn v2.0.119
+   Compiling crypto-common v0.1.7
+   Compiling subtle v2.6.1
+   Compiling block-buffer v0.10.4
+   Compiling digest v0.10.7
+   Compiling cpufeatures v0.2.17
+   Compiling autocfg v1.5.1
+   Compiling target-lexicon v0.13.5
+   Compiling inout v0.1.4
+   Compiling base64ct v1.8.3
+   Compiling rand_core v0.6.4
+   Compiling simd-adler32 v0.3.10
+   Compiling zstd-sys v2.0.16+zstd.1.5.7
+   Compiling bzip2-sys v0.1.13+1.0.8
+   Compiling adler2 v2.0.1
+   Compiling miniz_oxide v0.9.1
+   Compiling password-hash v0.4.2
+   Compiling cipher v0.4.4
+   Compiling sha2 v0.10.9
+   Compiling hmac v0.12.1
+   Compiling getrandom v0.2.17
+   Compiling zerocopy v0.8.56
+   Compiling powerfmt v0.2.0
+   Compiling deranged v0.5.8
+   Compiling num-conv v0.2.2
+   Compiling time-core v0.1.9
+   Compiling anyhow v1.0.104
+   Compiling pbkdf2 v0.11.0
+   Compiling time v0.3.55
+   Compiling aes v0.8.4
+   Compiling zerocopy-derive v0.8.56
+   Compiling pyo3-build-config v0.29.2
+   Compiling flate2 v1.1.10
+   Compiling bzip2 v0.4.4
+   Compiling num-traits v0.2.19
+   Compiling sha1 v0.10.7
+   Compiling serde_core v1.0.229
+   Compiling constant_time_eq v0.1.5
+   Compiling byteorder v1.5.0
+   Compiling zmij v1.0.23
+   Compiling pyo3-ffi v0.29.2
+   Compiling matrixmultiply v0.3.11
+   Compiling syn v3.0.4
+   Compiling serde v1.0.229
+   Compiling serde_json v1.0.151
+   Compiling zstd v0.11.2+zstd.1.5.2
+   Compiling zip v0.6.6
+   Compiling torch-sys v0.24.0
+   Compiling serde_derive v1.0.229
+   Compiling ppv-lite86 v0.2.21
+   Compiling itoa v1.0.18
+   Compiling memchr v2.8.3
+   Compiling heck v0.5.0
+   Compiling rawpointer v0.2.1
+   Compiling thiserror v1.0.69
+   Compiling pyo3-macros-backend v0.29.2
+   Compiling rand_chacha v0.3.1
+   Compiling num-complex v0.4.6
+   Compiling num-integer v0.1.47
+   Compiling pyo3 v0.29.2
+   Compiling thiserror-impl v1.0.69
+   Compiling tch v0.24.0
+   Compiling ndarray v0.16.1
+   Compiling safetensors v0.3.3
+   Compiling rand v0.8.8
+   Compiling pyo3-macros v0.29.2
+   Compiling half v2.7.1
+   Compiling lazy_static v1.5.0
+   Compiling allocator-api2 v0.2.21
+   Compiling equivalent v1.0.2
+   Compiling once_cell v1.21.4
+   Compiling foldhash v0.2.0
+   Compiling hashbrown v0.16.1
+   Compiling sglang-radix-tree v0.1.0 (/data/pr49518_fix_20261113/source/rust/sglang-radix-tree)
+    Finished `release` profile [optimized] target(s) in 2m 12s
+============================= test session starts ==============================
+platform linux -- Python 3.12.16, pytest-9.2.0, pluggy-1.7.0
+rootdir: /data/pr49518_fix_20261113/source/test
+configfile: pytest.ini
+plugins: typeguard-4.4.4, anyio-4.16.0, ai-dynamo-1.6.0, jaxtyping-0.3.11, platformdirs-4.13.6
+collected 36 items
+
+test/registered/unit/mem_cache/test_mamba_l3_snapshot_interval.py ...... [ 16%]
+..............................                                           [100%]
+
+=============================== warnings summary ===============================
+../../../opt/sglang/lib/python3.12/site-packages/_pytest/config/__init__.py:1507
+  /opt/sglang/lib/python3.12/site-packages/_pytest/config/__init__.py:1507: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; anyio
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+../../../opt/sglang/lib/python3.12/site-packages/_pytest/config/__init__.py:1507
+  /opt/sglang/lib/python3.12/site-packages/_pytest/config/__init__.py:1507: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; triton
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+../../../opt/sglang/lib/python3.12/site-packages/_pytest/config/__init__.py:1507
+  /opt/sglang/lib/python3.12/site-packages/_pytest/config/__init__.py:1507: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; sglang
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 36 passed, 3 warnings in 1.57s ========================

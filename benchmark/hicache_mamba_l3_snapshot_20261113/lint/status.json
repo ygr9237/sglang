@@ -1,0 +1,56 @@
+{
+  "steps": [
+    {
+      "name": "git-init",
+      "rc": 0,
+      "seconds": 0.01
+    },
+    {
+      "name": "git-config",
+      "rc": 0,
+      "seconds": 0.01
+    },
+    {
+      "name": "git-branch",
+      "rc": 0,
+      "seconds": 0.01
+    },
+    {
+      "name": "git-add",
+      "rc": 0,
+      "seconds": 0.12
+    },
+    {
+      "name": "precommit-initial",
+      "rc": 0,
+      "seconds": 60.45
+    },
+    {
+      "name": "precommit-final",
+      "rc": 0,
+      "seconds": 55.65
+    },
+    {
+      "name": "rustfmt-check",
+      "rc": 0,
+      "seconds": 0.57
+    }
+  ],
+  "running": false,
+  "sha256": {
+    "docs/docs/advanced_features/hicache.mdx": "0565bbf26bafa9f7066ab5b34a7f80fee2cd4be5053481ebd7ed6f864e2fd807",
+    "python/sglang/srt/arg_groups/field_order.py": "211a831cb71b2d8c7b531f166e6def0f325e66b32b5334ec5dbddbfc1c9a2b2f",
+    "python/sglang/srt/arg_groups/fields/memory.py": "2d4dbddcbcf84e25fd1c5e330c08cf4f9b8039c2cd885a0b4ee633217906569d",
+    "python/sglang/srt/arg_groups/hicache_hook.py": "625b683dde194ce5210c05124e512d04b59faf5c9c3e9b622a07614b484fc776",
+    "python/sglang/srt/mem_cache/base_prefix_cache.py": "9adbc387b06f220cc63453e97db5c9571c0abce2f8f99ad86c7e4bdd2bd95771",
+    "python/sglang/srt/mem_cache/rust_tree_core/adapter.py": "f1ec8dab336203eca1202e75c3598c3cf75d8025abf35e774d49f302f533ee76",
+    "python/sglang/srt/mem_cache/unified_cache/components/mamba.py": "33b6876e14b6c2bb878ad839b59585b1d4e8c13273b32d02eaec79ddca0cc9c5",
+    "python/sglang/srt/mem_cache/unified_cache/unified_tree_core.py": "813418881101cd5f9b6ecf5e4a95be8ff02fd1d5410ecd32091e6361dd2eb2b5",
+    "python/sglang/srt/mem_cache/unified_cache/unified_tree_core_interface.py": "48062ca04df90ec675f00edc81b0d6326b1399a30182255a8d9f8eb02a58210f",
+    "python/sglang/srt/mem_cache/unified_radix_cache.py": "b33157a2465862115656b877fb045978c85c97639c7aa7ebc07fa8568cfd6be4",
+    "rust/sglang-radix-tree/src/node.rs": "22abfa8351e8c04ba50d921877b5480cb31174b60843975851512e4fc6e93563",
+    "rust/sglang-radix-tree/src/python_bindings.rs": "8f0c6199fed97b5d233d368d90bfb0096ce8cc626a8835ee521e96af2291c4a7",
+    "rust/sglang-radix-tree/src/unified_tree_core.rs": "01d6e9631359a3856788a55313802d579544ea82b06157676618397be8f8945d",
+    "test/registered/unit/mem_cache/test_mamba_l3_snapshot_interval.py": "dc893eb5f384a7e4e4341d6b7f9866605eb04c7e540818746e74d439a0617ccf"
+  }
+}
