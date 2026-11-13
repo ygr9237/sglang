@@ -1,0 +1,87 @@
+test_real_gloo_cache_drift_and_failures (__main__.TestImageDPConsensus.test_real_gloo_cache_drift_and_failures) ... [CI Test Method] TestImageDPConsensus.test_real_gloo_cache_drift_and_failures
+image-DP cache disagreement: recomputing union of 2 image misses
+image-DP cache disagreement: recomputing union of 2 image misses
+image-DP cache disagreement: recomputing union of 2 image misses
+image-DP cache disagreement: recomputing union of 2 image misses
+W1113 11:40:18.679000 68231 torch/multiprocessing/spawn.py:165] Terminating process 68236 via signal SIGTERM
+Traceback (most recent call last):
+  File "/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/source/python/sglang/srt/utils/common.py", line 467, in retry
+    return fn()
+           ^^^^
+  File "/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/source/python/sglang/test/test_utils.py", line 2513, in <lambda>
+    lambda: super(CustomTestCase, self)._callTestMethod(method),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/unittest/case.py", line 589, in _callTestMethod
+    if method() is not None:
+       ^^^^^^^^
+  File "/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/source/test/registered/unit/multimodal/test_kimi_k3_image_dp_consensus.py", line 280, in test_real_gloo_cache_drift_and_failures
+    mp.spawn(_worker, args=(rendezvous, output), nprocs=2, join=True)
+  File "/opt/sglang/lib/python3.12/site-packages/torch/multiprocessing/spawn.py", line 340, in spawn
+    return start_processes(fn, args, nprocs, join, daemon, start_method="spawn")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/sglang/lib/python3.12/site-packages/torch/multiprocessing/spawn.py", line 296, in start_processes
+    while not context.join():
+              ^^^^^^^^^^^^^^
+  File "/opt/sglang/lib/python3.12/site-packages/torch/multiprocessing/spawn.py", line 211, in join
+    raise ProcessRaisedException(msg, error_index, failed_process.pid)
+torch.multiprocessing.spawn.ProcessRaisedException: 
+
+-- Process 1 terminated with the following error:
+Traceback (most recent call last):
+  File "/opt/sglang/lib/python3.12/site-packages/torch/multiprocessing/spawn.py", line 87, in _wrap
+    fn(i, *args)
+  File "/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/source/test/registered/unit/multimodal/test_kimi_k3_image_dp_consensus.py", line 253, in _worker
+    assert group.payloads == 0, (case, group.payloads)
+           ^^^^^^^^^^^^^^^^^^^
+AssertionError: ('receive_allocation', 1)
+
+ERROR
+
+======================================================================
+ERROR: test_real_gloo_cache_drift_and_failures (__main__.TestImageDPConsensus.test_real_gloo_cache_drift_and_failures)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/source/python/sglang/srt/utils/common.py", line 467, in retry
+    return fn()
+           ^^^^
+  File "/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/source/python/sglang/test/test_utils.py", line 2513, in <lambda>
+    lambda: super(CustomTestCase, self)._callTestMethod(method),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/python/cpython-3.12.16-linux-x86_64-gnu/lib/python3.12/unittest/case.py", line 589, in _callTestMethod
+    if method() is not None:
+       ^^^^^^^^
+  File "/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/source/test/registered/unit/multimodal/test_kimi_k3_image_dp_consensus.py", line 280, in test_real_gloo_cache_drift_and_failures
+    mp.spawn(_worker, args=(rendezvous, output), nprocs=2, join=True)
+  File "/opt/sglang/lib/python3.12/site-packages/torch/multiprocessing/spawn.py", line 340, in spawn
+    return start_processes(fn, args, nprocs, join, daemon, start_method="spawn")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/sglang/lib/python3.12/site-packages/torch/multiprocessing/spawn.py", line 296, in start_processes
+    while not context.join():
+              ^^^^^^^^^^^^^^
+  File "/opt/sglang/lib/python3.12/site-packages/torch/multiprocessing/spawn.py", line 211, in join
+    raise ProcessRaisedException(msg, error_index, failed_process.pid)
+torch.multiprocessing.spawn.ProcessRaisedException: 
+
+-- Process 1 terminated with the following error:
+Traceback (most recent call last):
+  File "/opt/sglang/lib/python3.12/site-packages/torch/multiprocessing/spawn.py", line 87, in _wrap
+    fn(i, *args)
+  File "/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/source/test/registered/unit/multimodal/test_kimi_k3_image_dp_consensus.py", line 253, in _worker
+    assert group.payloads == 0, (case, group.payloads)
+           ^^^^^^^^^^^^^^^^^^^
+AssertionError: ('receive_allocation', 1)
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/source/python/sglang/test/test_utils.py", line 2512, in _callTestMethod
+    retry(
+  File "/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/source/python/sglang/srt/utils/common.py", line 482, in retry
+    raise Exception("retry() exceed maximum number of retries.")
+Exception: retry() exceed maximum number of retries.
+
+----------------------------------------------------------------------
+Ran 1 test in 21.366s
+
+FAILED (errors=1)

@@ -1,0 +1,117 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.16, pytest-9.2.0, pluggy-1.7.0 -- /tmp/codex-sglang-pr5-20261112-run/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/source/test
+configfile: pytest.ini
+plugins: cov-7.1.0, platformdirs-4.14.5, typeguard-4.4.4, anyio-4.16.0, ai-dynamo-1.6.0, jaxtyping-0.3.11
+collecting ... collected 95 items
+
+test/registered/unit/multimodal/test_kimi_k3_pcp_vision_dp.py::TestKimiK3PCPVisionDP::test_kimi_only_selects_full_tp_for_replicated_cp_images 
+test/registered/unit/multimodal/test_kimi_k3_pcp_vision_dp.py::TestKimiK3PCPVisionDP::test_kimi_only_selects_full_tp_for_replicated_cp_images PASSED [  1%]
+test/registered/unit/multimodal/test_kimi_k3_pcp_vision_dp.py::TestKimiK3PCPVisionDP::test_pcp_image_group_encodes_each_image_once_and_restores_order 
+test/registered/unit/multimodal/test_kimi_k3_pcp_vision_dp.py::TestKimiK3PCPVisionDP::test_pcp_image_group_encodes_each_image_once_and_restores_order PASSED [  2%]
+test/registered/unit/multimodal/test_kimi_k3_pcp_vision_dp.py::TestKimiK3PCPVisionDP::test_replicated_cache_cold_hot_partial_and_empty_chunks 
+test/registered/unit/multimodal/test_kimi_k3_pcp_vision_dp.py::TestKimiK3PCPVisionDP::test_replicated_cache_cold_hot_partial_and_empty_chunks PASSED [  3%]
+test/registered/unit/multimodal/test_kimi_k3_image_dp_consensus.py::TestImageDPConsensus::test_real_gloo_cache_drift_and_failures PASSED [  4%]
+test/registered/unit/multimodal/test_mrope_encoder_utils.py::TestMropeVisionEncoderPadding::test_already_full_embedding_is_not_copied PASSED [  5%]
+test/registered/unit/multimodal/test_mrope_encoder_utils.py::TestMropeVisionEncoderPadding::test_dp_encoder_reconstructs_an_underfilled_rope2d_rank PASSED [  6%]
+test/registered/unit/multimodal/test_mrope_encoder_utils.py::TestMropeVisionEncoderPadding::test_empty_rank_gets_a_gatherable_shape PASSED [  7%]
+test/registered/unit/multimodal/test_mrope_encoder_utils.py::TestMropeVisionEncoderPadding::test_padding_preserves_2d_embedding_prefix PASSED [  8%]
+test/registered/unit/multimodal/test_mrope_encoder_utils.py::TestMropeVisionEncoderPadding::test_padding_preserves_3d_embedding_prefix PASSED [  9%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_gpu_preprocess_batches_only_source_compatible_images PASSED [ 10%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_resize_tracks_the_checkpoint_processors_pil_bicubic PASSED [ 11%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_resize_is_a_dtype_only_cast_when_already_at_target PASSED [ 12%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_expands_one_placeholder_per_image_from_existing_ids PASSED [ 13%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_expansion_rejects_a_placeholder_count_mismatch PASSED [ 14%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_expansion_matches_the_base_retokenize_avoidance_rebuild PASSED [ 15%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_cpu_fallback_keeps_the_request_tokens PASSED [ 16%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_cpu_fallback_falls_back_to_the_hf_tokens_without_request_ids PASSED [ 17%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_refuses_already_normalized_float_pixels PASSED [ 18%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_placeholder_count_only_reads_real_token_ids PASSED [ 20%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_single_frame_pool_matches_the_temporal_mean PASSED [ 21%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_multi_frame_pool_still_averages_across_frames PASSED [ 22%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_projection_returns_one_flattened_feature_tensor PASSED [ 23%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_projection_does_not_copy_a_single_image PASSED [ 24%]
+test/registered/unit/models/test_kimi_k25.py::test_dp_helper_supports_moonvit3d_packed_embeddings_on_tp1 PASSED [ 25%]
+test/registered/unit/models/test_kimi_k25.py::test_dp_helper_can_lazily_load_kimi_features_on_tp1 PASSED [ 26%]
+test/registered/unit/models/test_kimi_k25.py::test_dp_helper_uses_config_hidden_size_for_empty_moonvit3d_rank PASSED [ 27%]
+test/registered/unit/models/test_kimi_k25.py::test_dp_helper_broadcasts_a_single_image_from_its_owner_rank PASSED [ 28%]
+test/registered/unit/models/test_kimi_k25.py::test_dp_helper_lazily_loads_only_its_local_image_shard PASSED [ 29%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k25_encoder_dp_selects_packed_moonvit_contract PASSED [ 30%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_non_dp_keeps_grid_thws_on_the_host PASSED [ 31%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_lazy_ipc_feature_skips_scheduler_reconstruction PASSED [ 32%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_lazy_ipc_feature_acknowledges_all_tp_consumers PASSED [ 33%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_lazy_vmm_feature_uses_proxy_consumer_count PASSED [ 34%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_lazy_vmm_cache_hit_uses_proxy_consumer_count PASSED [ 35%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k25_fingerprint_includes_gpu_preprocessing_options PASSED [ 36%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_processor_workers_clone_the_gpu_wrapper[KimiK2_5VLImageProcessor-KimiGPUProcessorWrapper] PASSED [ 37%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_processor_workers_clone_the_gpu_wrapper[KimiK3ImageProcessor-KimiK3GPUProcessorWrapper] PASSED [ 38%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k3_expands_image_placeholders_with_original_dimensions PASSED [ 40%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k3_cpu_prompt_uses_the_same_media_contract PASSED [ 41%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k3_epd_rebuild_uses_the_same_media_contract PASSED [ 42%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k3_cached_artifact_is_composed_per_prompt PASSED [ 43%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k3_cached_deferred_artifact_has_model_contract PASSED [ 44%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k3_normal_cache_path_connects_real_producer_to_model_consumer PASSED [ 45%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k3_model_accepts_mixed_cached_eager_and_deferred_artifacts PASSED [ 46%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k3_trusted_hot_hit_skips_media_read PASSED [ 47%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k3_default_media_options_share_one_artifact_key PASSED [ 48%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k3_output_affecting_media_options_do_not_share_artifacts PASSED [ 49%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k3_rejects_changed_feature_hash_for_same_artifact PASSED [ 50%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k3_artifact_and_data_item_share_hash_resolution PASSED [ 51%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k3_untrusted_path_change_is_a_cache_miss PASSED [ 52%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k3_partial_hits_deduplicate_misses_and_preserve_order PASSED [ 53%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k3_cancelled_artifact_owner_does_not_fail_joiner PASSED [ 54%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k3_cpu_transport_defers_gpu_preprocessing PASSED [ 55%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k3_defers_only_when_raw_transport_is_smaller[image_shape0-65536-True] PASSED [ 56%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k3_defers_only_when_raw_transport_is_smaller[image_shape1-1-False] PASSED [ 57%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k3_does_not_defer_non_uint8_tensor_preprocessing PASSED [ 58%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k3_does_not_defer_empty_image_batch PASSED [ 60%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k3_eager_preprocessing_preserves_float_tensor_support PASSED [ 61%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k3_keeps_gpu_transport_preprocessing_eager[cuda_ipc] PASSED [ 62%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k3_keeps_gpu_transport_preprocessing_eager[cuda_vmm] PASSED [ 63%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k3_rejects_silently_dropped_images PASSED [ 64%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k3_uses_token_ids_to_preserve_media_boundaries PASSED [ 65%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k3_rejects_tokenized_placeholder_mismatch PASSED [ 66%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k3_rejects_unsupported_modalities[request_obj0-extra_kwargs0] PASSED [ 67%]
+test/registered/unit/models/test_kimi_k25.py::test_kimi_k3_rejects_unsupported_modalities[request_obj1-extra_kwargs1] PASSED [ 68%]
+test/registered/unit/models/test_kimi_vl.py::TestKimiVLEncoderParallelism::test_encoder_dp_keeps_moonvit_grid_metadata_on_vision_device PASSED [ 69%]
+test/registered/unit/models/test_kimi_vl.py::TestKimiVLEncoderParallelism::test_encoder_dp_tp1_concatenates_moonvit_image_outputs PASSED [ 70%]
+test/registered/unit/models/test_kimi_vl.py::TestKimiVLEncoderParallelism::test_encoder_dp_uses_existing_mrope_sharding_helper PASSED [ 71%]
+test/registered/unit/models/test_kimi_k3_vision.py::test_kimi_k3_vision_backend_label_can_overlap_module_name PASSED [ 72%]
+test/registered/unit/models/test_kimi_k3_vision.py::test_kimi_k3_resolves_shape_aware_attention_backend[sdpa-cuda-capability0-8192-8192-True-sdpa] PASSED [ 73%]
+test/registered/unit/models/test_kimi_k3_vision.py::test_kimi_k3_resolves_shape_aware_attention_backend[auto-cpu-None-1024-1024-True-sdpa] PASSED [ 74%]
+test/registered/unit/models/test_kimi_k3_vision.py::test_kimi_k3_resolves_shape_aware_attention_backend[auto-cuda-capability2-1024-1024-True-sdpa] PASSED [ 75%]
+test/registered/unit/models/test_kimi_k3_vision.py::test_kimi_k3_resolves_shape_aware_attention_backend[auto-cuda-capability3-1536-1536-True-triton_attn] PASSED [ 76%]
+test/registered/unit/models/test_kimi_k3_vision.py::test_kimi_k3_resolves_shape_aware_attention_backend[auto-cuda-capability4-1600-1600-True-fa4] PASSED [ 77%]
+test/registered/unit/models/test_kimi_k3_vision.py::test_kimi_k3_resolves_shape_aware_attention_backend[auto-cuda-capability5-1024-4096-True-fa4] PASSED [ 78%]
+test/registered/unit/models/test_kimi_k3_vision.py::test_kimi_k3_resolves_shape_aware_attention_backend[auto-cuda-capability6-1536-1536-False-triton_attn] PASSED [ 80%]
+test/registered/unit/models/test_kimi_k3_vision.py::test_kimi_k3_resolves_shape_aware_attention_backend[auto-cuda-capability7-1600-1600-False-sdpa] PASSED [ 81%]
+test/registered/unit/models/test_kimi_k3_vision.py::test_kimi_k3_skips_attention_precompile_on_cpu PASSED [ 82%]
+test/registered/unit/models/test_kimi_k3_vision.py::test_kimi_k3_sdpa_reuses_prepared_segment_bounds PASSED [ 83%]
+test/registered/unit/models/test_kimi_k3_vision.py::test_kimi_k3_vision_tower_reuses_prepared_forward_metadata PASSED [ 84%]
+test/registered/unit/models/test_kimi_k3_vision.py::test_kimi_k3_dp_helper_passes_host_grid_list_to_capable_tower PASSED [ 85%]
+test/registered/unit/models/test_kimi_k3_vision.py::test_kimi_k3_vit_graph_runner_bounds_shape_observations PASSED [ 86%]
+test/registered/unit/models/test_kimi_k3_vision.py::test_kimi_k3_vit_graph_runner_skips_eager_on_capture PASSED [ 87%]
+test/registered/unit/models/test_kimi_k3_vision.py::test_kimi_k3_vit_graph_runner_uses_eager_above_max_seqlen PASSED [ 88%]
+test/registered/unit/models/test_kimi_k3_vision.py::test_kimi_k3_vit_graph_runner_reuses_global_graph_pool PASSED [ 89%]
+test/registered/unit/models/test_kimi_k3_vision.py::test_kimi_k3_vit_graph_runner_rejects_invalid_limits[0-1-None] PASSED [ 90%]
+test/registered/unit/models/test_kimi_k3_vision.py::test_kimi_k3_vit_graph_runner_rejects_invalid_limits[1-0-None] PASSED [ 91%]
+test/registered/unit/models/test_kimi_k3_vision.py::test_kimi_k3_vit_graph_runner_rejects_invalid_limits[1-1-0] PASSED [ 92%]
+test/registered/unit/models/test_kimi_k3_vision.py::test_kimi_k3_position_interpolation_uses_contiguous_chw PASSED [ 93%]
+test/registered/unit/models/test_kimi_k3_vision.py::test_kimi_k3_prepares_shared_attention_metadata_once PASSED [ 94%]
+test/registered/unit/models/test_kimi_k3_vision.py::test_flashinfer_cudnn_metadata_uses_bucketed_element_indptrs PASSED [ 95%]
+test/registered/unit/models/test_kimi_k3_vision.py::test_kimi_k3_encoder_dp_defers_feature_materialization PASSED [ 96%]
+test/registered/unit/models/test_kimi_k3_vision.py::test_kimi_k3_preprocesses_only_dp_owner_images PASSED [ 97%]
+test/registered/unit/models/test_kimi_k3_vision.py::test_kimi_k3_scheduler_leaves_feature_placement_to_dp_owner PASSED [ 98%]
+test/registered/unit/models/test_kimi_k3_vision.py::test_kimi_k3_rejects_aggregated_items PASSED [100%]
+
+=============================== warnings summary ===============================
+python/sglang/srt/layers/quantization/awq/awq.py:53
+  /tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/source/python/sglang/srt/layers/quantization/awq/awq.py:53: UserWarning: Only CUDA, HIP and XPU support AWQ currently.
+    warnings.warn(f"Only CUDA, HIP and XPU support AWQ currently.")
+
+<frozen abc>:106
+  <frozen abc>:106: DeprecationWarning: MultiPlatformOp is deprecated; subclass sglang.kernels.fused_op.BaseFusedOp instead (RFC #29630).
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============= 95 passed, 2 warnings, 11 subtests passed in 49.77s ==============

@@ -1,0 +1,3 @@
+ M python/sglang/srt/multimodal/mm_utils.py
+ M test/registered/unit/multimodal/test_kimi_k3_image_dp_consensus.py
+ M test/registered/unit/multimodal/test_kimi_k3_pcp_vision_dp.py

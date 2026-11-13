@@ -7,6 +7,14 @@
     "bytes": 20055,
     "sha256": "122dcdefc3c3d6cef93e3a030436d9c2e41d3cc454f3eaed82737c2f2cdb35a4"
   },
+  "ci-gate-job.json": {
+    "bytes": 2960,
+    "sha256": "32a6c9d05f089ad97b4e1c44bea0c7be76b7f5692df53878e6358241eed7aa15"
+  },
+  "ci-status.json": {
+    "bytes": 440761,
+    "sha256": "ad9b42211430292f0be4b284935d3f331f1fd3c932dc4a27c505355c048aad94"
+  },
   "complete-candidate-main.patch": {
     "bytes": 55419,
     "sha256": "cfc189298bee3389188f4115156a480f9f620183253b2187a0727e7a823d314b"
@@ -34,6 +42,10 @@
   "post_gpu.py": {
     "bytes": 2677,
     "sha256": "b5f2e1575bca8665da8b2b7d2764df1b2e0818abf68a1678f05d3ebcf0d61497"
+  },
+  "README.md": {
+    "bytes": 1762,
+    "sha256": "07573fb5865e910c874fb5e28677ab7f84fd4ee976c354a1758121fd8e346e98"
   },
   "server-evidence.tar.gz": {
     "bytes": 574943,
@@ -234,9 +246,5 @@
   "source-after/python/sglang/srt/multimodal/mm_utils.py": {
     "bytes": 36829,
     "sha256": "4436feca788b3930ccf6834d5b7a9299d97734c9d1b1bb3c28f21201221bd69b"
-  },
-  "README.md": {
-    "bytes": 1747,
-    "sha256": "49553d8ec67a569d1356b0aebde1ee061d5401464a1070b6504c60caa4d665c4"
   }
 }

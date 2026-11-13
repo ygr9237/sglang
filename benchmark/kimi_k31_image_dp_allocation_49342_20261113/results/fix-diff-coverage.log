@@ -1,0 +1,13 @@
+/tmp/codex-sglang-pr5-20261112-run/venv/lib/python3.12/site-packages/diff_cover/diff_cover_tool.py:393: UserWarning: The --json-report option is deprecated. Use --format json:/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/results/fix-diff-coverage.json instead.
+  warnings.warn(
+-------------
+Diff Coverage
+Diff: HEAD...HEAD, staged and unstaged changes
+-------------
+python/sglang/srt/multimodal/mm_utils.py (100%)
+-------------
+Total:   8 lines
+Missing: 0 lines
+Coverage: 100%
+-------------
+

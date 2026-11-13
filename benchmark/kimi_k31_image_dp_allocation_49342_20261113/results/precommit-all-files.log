@@ -1,0 +1,38 @@
+check for broken symlinks...................................................................................Passed
+detect destroyed symlinks...................................................................................Passed
+trim trailing whitespace....................................................................................Passed
+fix end of files............................................................................................Passed
+check yaml..................................................................................................Passed
+check toml..................................................................................................Passed
+check python ast............................................................................................Passed
+check for added large files.................................................................................Passed
+check for merge conflicts...................................................................................Passed
+check that scripts with shebangs are executable.............................................................Passed
+detect private key..........................................................................................Passed
+debug statements (python)...................................................................................Passed
+don't commit to branch......................................................................................Passed
+isort.......................................................................................................Passed
+ruff (legacy alias).........................................................................................Passed
+ruff format.................................................................................................Passed
+codespell...................................................................................................Passed
+clang-format................................................................................................Passed
+nbstripout..................................................................................................Passed
+forbid test/srt/ (use test/registered/ or test/manual/).................................(no files to check)Skipped
+forbid docs_new/ (renamed to docs/).....................................................(no files to check)Skipped
+check chinese characters in multimodal_gen..................................................................Passed
+sort CI_PERMISSIONS.json....................................................................................Passed
+sort Cookbook vendor groups in docs/docs.json...............................................................Passed
+check for duplicate workflow job names......................................................................Passed
+check opt-in CI tiers match the workflows that gate on them.................................................Passed
+check rust-ext cache key prefix defaults match..............................................................Passed
+check Dockerfile sgl-deep-gemm/sgl-deep-ep versions match python/pyproject.toml.............................Passed
+reject bare pytest.main calls in __main__ blocks............................................................Passed
+regenerate python/sglang/cli/_commands/ from the Cookbook configs...........................................Passed
+validate registered test CI registries......................................................................Passed
+reject CI-registered tests inside the sglang package........................................................Passed
+reject importing a name through a module that only re-imports it............................................Passed
+reject srt domain imports in sglang.srt.utils and sglang.utils imports in the runtime.......................Passed
+rustfmt sgl-model-gateway (nightly).........................................................................Passed
+rustfmt sgl-router..........................................................................................Passed
+clippy rust/ workspace (auto-fix)...........................................................................Passed
+rustfmt rust/ workspace.....................................................................................Passed

@@ -1,0 +1,13 @@
+/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/source/python/sglang/srt/layers/quantization/awq/awq.py:53: UserWarning: Only CUDA, HIP and XPU support AWQ currently.
+  warnings.warn(f"Only CUDA, HIP and XPU support AWQ currently.")
+test_kimi_only_selects_full_tp_for_replicated_cp_images (__main__.TestKimiK3PCPVisionDP.test_kimi_only_selects_full_tp_for_replicated_cp_images) ... [CI Test Method] TestKimiK3PCPVisionDP.test_kimi_only_selects_full_tp_for_replicated_cp_images
+ok
+test_pcp_image_group_encodes_each_image_once_and_restores_order (__main__.TestKimiK3PCPVisionDP.test_pcp_image_group_encodes_each_image_once_and_restores_order) ... [CI Test Method] TestKimiK3PCPVisionDP.test_pcp_image_group_encodes_each_image_once_and_restores_order
+ok
+test_replicated_cache_cold_hot_partial_and_empty_chunks (__main__.TestKimiK3PCPVisionDP.test_replicated_cache_cold_hot_partial_and_empty_chunks) ... [CI Test Method] TestKimiK3PCPVisionDP.test_replicated_cache_cold_hot_partial_and_empty_chunks
+ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.013s
+
+OK

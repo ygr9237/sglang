@@ -1,0 +1,16 @@
+/tmp/codex-sglang-pr5-20261112-run/venv/lib/python3.12/site-packages/diff_cover/diff_cover_tool.py:393: UserWarning: The --json-report option is deprecated. Use --format json:/tmp/codex-sglang-pr5-20261112-run/pr49342-20261113/results/pr-diff-coverage.json instead.
+  warnings.warn(
+-------------
+Diff Coverage
+Diff: 704681229f1cdda291dbd2261dabb2ae80a4a49d...HEAD, staged and unstaged changes
+-------------
+python/sglang/srt/managers/mm_schedule.py (91.4%): Missing lines 360,493,497,588,592,714
+python/sglang/srt/models/kimi_k3.py (100%)
+python/sglang/srt/multimodal/image_dp_consensus.py (100%)
+python/sglang/srt/multimodal/mm_utils.py (86.9%): Missing lines 785,787,790-791,794-797
+-------------
+Total:   213 lines
+Missing: 14 lines
+Coverage: 93%
+-------------
+
